@@ -294,3 +294,4 @@ while True:
             break
 
             # 流程完毕后， 提示用户给钱。票源会留着，别担心。
+        break
