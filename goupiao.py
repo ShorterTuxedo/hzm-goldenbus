@@ -16,8 +16,9 @@ from email.header import Header
 info = json.loads(open("info.json", "r").read())
 
 def ticket_success():
+    global info
     print("Bought ticket")
-    myDates = ", ".join(winningDates)
+    myDates = info["date"]
     myEmailContent = open("HZMB_Success_Email.html", "r", encoding="UTF-8").read()
     myEmailContent = myEmailContent.replace("[INSERT DATES HERE]", myDates)
     myEmailTContent = open("HZMB_Success_Email.txt", "r", encoding="UTF-8").read()
