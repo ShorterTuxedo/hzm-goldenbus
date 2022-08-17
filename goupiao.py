@@ -211,6 +211,7 @@ while True:
 
             for TIME in TIMES:
                 if bestTiming == None and numPeople == None:
+                    print(TIME)
                     bestTiming = TIME["beginTime"]
                     numPeople = TIME["maxPeople"]
                 else:
@@ -228,68 +229,74 @@ while True:
                 writeLog("[位置不够] 抱歉！可用票额不可容下您的同住人。")
                 break
 
-            result = None
+            while True:
+                result = None
 
-            while result == None:
-                homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
+                while result == None:
+                    homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
 
-                with open("captcha_buy.png", "wb") as code:
-                    code.write(homepage.content)
+                    with open("captcha_buy.png", "wb") as code:
+                        code.write(homepage.content)
 
-                recognizer = ddddocr.DdddOcr(old=True)
+                    recognizer = ddddocr.DdddOcr(old=True)
 
-                code = open("captcha_buy.png", "rb").read()
+                    code = open("captcha_buy.png", "rb").read()
 
-                result = recognizer.classification(code)
+                    result = recognizer.classification(code)
 
-                if not result.isnumeric():
+                    if not result.isnumeric():
 
-                    writeLog("[验证码失败] 哎哟！我没有识别正确。")
+                        writeLog("[验证码失败] 哎哟！我没有识别正确。")
 
-                    result = None
+                        result = None
 
-            writeLog("[验证码结果] 验证码结果为 " + result)
+                writeLog("[验证码结果] 验证码结果为 " + result)
 
-            homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
-            "ticketData": DATE,
-            "lineCode": ROUTE,
-            "startStationCode": START,
-            "endStationCode": END,
-            "boardingPointCode": START + "01",
-            "breakoutPointCode": END + "01",
-            "currency": "2",
-            "ticketCategory": "1",
-            "tickets": PASSENGERS,
-            "amount": TOTAL_PRICE * 100,
-            "feeType": 9,
-            "totalVoucherpay": 0,
-            "voucherNum": 0,
-            "voucherStr": "",
-            "totalBalpay": 0,
-            "totalNeedpay": TOTAL_PRICE * 100,
-            "bookBeginTime": bestTiming,
-            "bookEndTime": bestTiming,
-            "captcha": result,
-            "sessionId": "",
-            "sig": "",
-            "token": "",
-            "timestamp": int(time.time()),
-            "appId": "HZMBWEB_HK",
-            "joinType": "WEB",
-            "version": "2.7.202207.1213",
-            "equipment": "PC"
-            })
+                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
+                "ticketData": DATE,
+                "lineCode": ROUTE,
+                "startStationCode": START,
+                "endStationCode": END,
+                "boardingPointCode": START + "01",
+                "breakoutPointCode": END + "01",
+                "currency": "2",
+                "ticketCategory": "1",
+                "tickets": PASSENGERS,
+                "amount": TOTAL_PRICE * 100,
+                "feeType": 9,
+                "totalVoucherpay": 0,
+                "voucherNum": 0,
+                "voucherStr": "",
+                "totalBalpay": 0,
+                "totalNeedpay": TOTAL_PRICE * 100,
+                "bookBeginTime": bestTiming,
+                "bookEndTime": bestTiming,
+                "captcha": result,
+                "sessionId": "",
+                "sig": "",
+                "token": "",
+                "timestamp": int(time.time()),
+                "appId": "HZMBWEB_HK",
+                "joinType": "WEB",
+                "version": "2.7.202207.1213",
+                "equipment": "PC"
+                })
 
-            writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
+                writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
 
-            SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
+                SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
 
-            if SUCCESS:
-                writeLog("[购票成功] 请抓紧时间支付车费。")
-                ticket_success()
-            else:
-                writeLog("[购票失败] 抱歉！购票流程中出现问题。")
-                ticket_failure()
+                if SUCCESS:
+                    writeLog("[购票成功] 请抓紧时间支付车费。")
+                    ticket_success()
+                    break
+                else:
+                    if homepage.json().get("message", "无信息") == "验证码不正确":
+                        writeLog("[哎呀] 没能够搞定验证码。")
+                        continue
+                    writeLog("[购票失败] 抱歉！购票流程中出现问题。")
+                    ticket_failure()
+                    break
 
             break
 
