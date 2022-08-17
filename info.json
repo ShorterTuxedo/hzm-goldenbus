@@ -1,0 +1,20 @@
+{
+    "uname": "平台电邮",
+    "pwd": "平台密码",
+    "route": "路线，（珠海 ZHO 澳门 MAC 香港 HKG， 香港往珠海 = HKGZHO）",
+    "date": "预约日期 YYYY-MM-DD",
+    "passengers": [
+        {
+          "ticketType": "00 为成人 01 为儿童",
+          "idCard": "证件号",
+          "idType": 1,
+          "userName": "姓名",
+          "telNum": ""
+        }, 同住人用逗号分开
+    ],
+    "mysendemail": "邮箱号（建议使用网易邮箱）",
+    "emailreceivers": ["接收电邮的邮箱号（使用双引号包括，用逗号分开）"],
+    "smtppwd": "SMTP密码 （网易邮箱有SMTP访问密码）",
+    "smtphost": "SMTP服务器",
+    "smtpport": SMTP端口
+}
