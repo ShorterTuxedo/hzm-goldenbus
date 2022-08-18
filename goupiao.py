@@ -44,7 +44,7 @@ def ticket_success():
         smtpObj = smtplib.SMTP_SSL(info["smtphost"], info["smtpport"])
         smtpObj.ehlo()
         # stmpObj.starttls()
-        smtpObj.login(info["mysendemail"], info["stmppwd"])
+        smtpObj.login(info["mysendemail"], info["smtppwd"])
         smtpObj.sendmail(sender, receivers, message.as_string())
         print("邮件发送成功")
     except smtplib.SMTPException as e:
