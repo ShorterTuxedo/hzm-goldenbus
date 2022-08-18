@@ -203,6 +203,11 @@ while True:
                 "equipment":"PC"
             })
 
+            if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
+                writeLog("[被限速] 要等一会儿。")
+                time.sleep(30*60) # 等 30 分
+                continue
+
             TIMES = homepage.json()["responseData"]
 
             bestTiming = None
@@ -223,6 +228,7 @@ while True:
 
             if numPeople <= 0:
                 writeLog("[没有空位] 抱歉！没有空位。")
+                time.sleep(5 * 60)
                 continue
 
             if numPeople < len(PASSENGERS):
