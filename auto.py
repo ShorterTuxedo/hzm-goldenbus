@@ -176,7 +176,7 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if (weekday != 2) or (hour >= eightPM):
+    if (weekday != 1) or (hour >= eightPM):
         while True:
             gotTicket = False
             while not gotTicket:
