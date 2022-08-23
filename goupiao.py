@@ -173,7 +173,7 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if (weekday != 2) or (hour >= eightPM):
+    if (weekday != 1) or (hour >= eightPM):
         while True:
             writeLog(f"[购票中] 正在购买 {BUS_STOPS[START]} => {BUS_STOPS[END]} 车次的车票。")
             homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
