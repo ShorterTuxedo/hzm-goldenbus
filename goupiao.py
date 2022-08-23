@@ -205,7 +205,7 @@ while True:
 
             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                 writeLog("[被限速] 要等一会儿。")
-                time.sleep(30*60) # 等 30 分
+                # time.sleep(30*60) # 等 30 分
                 continue
 
             TIMES = homepage.json()["responseData"]
@@ -228,7 +228,7 @@ while True:
 
             if numPeople <= 0:
                 writeLog("[没有空位] 抱歉！没有空位。")
-                time.sleep(5 * 60)
+                # time.sleep(5 * 60)
                 continue
 
             if numPeople < len(PASSENGERS):
@@ -299,6 +299,10 @@ while True:
                 else:
                     if homepage.json().get("message", "无信息") == "验证码不正确":
                         writeLog("[哎呀] 没能够搞定验证码。")
+                        continue
+                    if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
+                        writeLog("[被限速] 要等一会儿。")
+                        # time.sleep(30*60) # 等 30 分
                         continue
                     writeLog("[购票失败] 抱歉！购票流程中出现问题。")
                     ticket_failure()
