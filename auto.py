@@ -120,6 +120,8 @@ BUS_STOPS = {
     "HKG": "香港"
 }
 
+# print(homepage.json())
+
 headers["Authorization"] = homepage.json()["jwt"]
 
 writeLog("[已登录] 完成登陆流程。")
@@ -185,6 +187,8 @@ while True:
                 bestDate = None
                 bestBestTiming = None
                 DAYS_UNTIL_NEXT_TUESDAY = datetime.timedelta( (1-datetime.datetime.today().weekday()) % 7 ).days
+                if DAYS_UNTIL_NEXT_TUESDAY == 0:
+                    DAYS_UNTIL_NEXT_TUESDAY = 7
                 day = 0
                 while True:
                     if day > DAYS_UNTIL_NEXT_TUESDAY:
