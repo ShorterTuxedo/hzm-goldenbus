@@ -179,6 +179,7 @@ eightPM = 20
 #dt=int()/1000-time.time()
 #print(dt)
 FINISHEDCAPTCHA = False
+my_cap = {"sessionId": "", "sig": "", "token": ""}
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)

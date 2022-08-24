@@ -191,6 +191,7 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
     weekday = now.weekday()
+    my_cap = {"sessionId": "", "sig": "", "token": ""}
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
     if (not FINISHEDCAPTCHA) and (((weekday == 1) and (now.hour == 19 and (now.minute >= 50 and now.minute <= 59))) and CAPTCHA == 2):
         FINISHEDCAPTCHA = True
