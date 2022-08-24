@@ -10,6 +10,7 @@ import acw_sc_v2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
+from urllib import parse
 
 # 00 = 成人 , 01 = 儿童
 # 请使用港币支付
@@ -194,7 +195,7 @@ while True:
     if (not FINISHEDCAPTCHA) and (((weekday == 1) and (now.hour == 19 and (now.minute >= 50 and now.minute <= 59))) and CAPTCHA == 2):
         FINISHEDCAPTCHA = True
         referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[startStationCode]}&xlmc_2={BUS_STOPS[endStationCode]}&xllb=1&xldm={ROUTE}&code_1={startStationCode}&code_2={endStationCode}"
-        referrerURL = parse.urlencode(referrerURL)
+        referrerURL = parse.quote_plus(referrerURL)
         my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
         if my_cap == None:
             break
