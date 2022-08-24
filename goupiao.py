@@ -5,6 +5,7 @@ import datetime
 import ddddocr
 import json
 import smtplib
+import acw_sc_v2
 import crack_ali
 from urllib import parse
 from email.mime.text import MIMEText
@@ -89,6 +90,14 @@ writeLog("="*20+"开始运行"+"="*20)
 
 homepage = hzmbus.get("https://i.hzmbus.com/webhtml/login", headers=headers)
 
+if homepage.text.startswith("<html><script>"):
+    arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+    print("arg1="+arg1)
+    ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+    print("acw_sc__v2="+ACWSCV2)
+    acw = requests.cookies.RequestsCookieJar()
+    acw.set("acw_sc__v2", ACWSCV2)
+    hzmbus.cookies.update(acw)
 
 headers = {
     "accept": "application/json, text/plain, */*",
@@ -121,6 +130,8 @@ BUS_STOPS = {
     "MAC": "澳门",
     "HKG": "香港"
 }
+
+
 
 headers["Authorization"] = homepage.json()["jwt"]
 
