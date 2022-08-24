@@ -13,6 +13,8 @@ from email.header import Header
 # 请使用港币支付
 # 需要于 8：00 前几分钟运行。
 
+CAPTCHA = 2 # 2 = 阿里云， 1 = 文字
+
 info = json.loads(open("info.json", "r").read())
 
 DATE = "1970-01-01" # 替代日期
@@ -128,6 +130,8 @@ writeLog("[已登录] 完成登陆流程。")
 
 ROUTE = info["route"]
 
+TRACK = info.get("track", "")
+
 START = ROUTE[:3]
 
 END = ROUTE[3:]
@@ -166,6 +170,7 @@ eightPM = 20
 #dt=int()/1000-time.time()
 #print(dt)
 DF = "%Y-%m-%d"
+FINISHEDCAPTCHA = False
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)
@@ -176,7 +181,16 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
+    if (not FINISHEDCAPTCHA) and (((weekday == 1) and (now.hour == 19 and (now.minute >= 50 and now.minute <= 59))) and CAPTCHA == 2):
+        FINISHEDCAPTCHA = True
+        referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[startStationCode]}&xlmc_2={BUS_STOPS[endStationCode]}&xllb=1&xldm={ROUTE}&code_1={startStationCode}&code_2={endStationCode}"
+        referrerURL = parse.urlencode(referrerURL)
+        my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+        if my_cap == None:
+            break
     if (weekday != 1) or (hour >= eightPM):
+        if CAPTCHA == 1:
+            my_cap = {"sessionId": "", "sig": "", "token": ""}
         while True:
             gotTicket = False
             while not gotTicket:
@@ -279,27 +293,30 @@ while True:
             DATE = bestDate
             bestTiming = bestBestTiming
             while True:
-                result = None
+                if CAPTCHA == 1:
+                    result = None
 
-                while result == None:
-                    homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
+                    while result == None:
+                        homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
 
-                    with open("captcha_buy.png", "wb") as code:
-                        code.write(homepage.content)
+                        with open("captcha_buy.png", "wb") as code:
+                            code.write(homepage.content)
 
-                    recognizer = ddddocr.DdddOcr(old=True)
+                        recognizer = ddddocr.DdddOcr(old=True)
 
-                    code = open("captcha_buy.png", "rb").read()
+                        code = open("captcha_buy.png", "rb").read()
 
-                    result = recognizer.classification(code)
+                        result = recognizer.classification(code)
 
-                    if not result.isnumeric():
+                        if not result.isnumeric():
 
-                        writeLog("[验证码失败] 哎哟！我没有识别正确。")
+                            writeLog("[验证码失败] 哎哟！我没有识别正确。")
 
-                        result = None
+                            result = None
 
-                writeLog("[验证码结果] 验证码结果为 " + result)
+                    writeLog("[验证码结果] 验证码结果为 " + result)
+                else:
+                    result = ""
 
                 homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
                 "ticketData": DATE,
@@ -321,9 +338,9 @@ while True:
                 "bookBeginTime": bestTiming,
                 "bookEndTime": bestTiming,
                 "captcha": result,
-                "sessionId": "",
-                "sig": "",
-                "token": "",
+                "sessionId": "" if CAPTCHA == 1 else my_cap["sessionId"],
+                "sig": "" if CAPTCHA == 1 else my_cap["sig"],
+                "token": "" if CAPTCHA == 1 else my_cap["token"],
                 "timestamp": int(time.time()),
                 "appId": "HZMBWEB_HK",
                 "joinType": "WEB",
