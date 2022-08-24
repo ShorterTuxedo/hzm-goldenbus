@@ -210,6 +210,16 @@ while True:
                 "equipment":"PC"
             })
 
+            if homepage.text.startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                print("arg1="+arg1)
+                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                print("acw_sc__v2="+ACWSCV2)
+                acw = requests.cookies.RequestsCookieJar()
+                acw.set("acw_sc__v2", ACWSCV2)
+                hzmbus.cookies.update(acw)
+                continue
+
             PRICES = homepage.json()
 
             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
@@ -233,6 +243,20 @@ while True:
                     while result == None:
                         homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
 
+                        try:
+                            if homepage.text.startswith("<html><script>"):
+                                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                                print("arg1="+arg1)
+                                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                                print("acw_sc__v2="+ACWSCV2)
+                                acw = requests.cookies.RequestsCookieJar()
+                                acw.set("acw_sc__v2", ACWSCV2)
+                                hzmbus.cookies.update(acw)
+                                result = None
+                                continue
+                        except Exception:
+                            pass
+                        
                         with open("captcha_buy.png", "wb") as code:
                             code.write(homepage.content)
 
@@ -241,6 +265,7 @@ while True:
                         code = open("captcha_buy.png", "rb").read()
 
                         result = recognizer.classification(code)
+
 
                         if not result.isnumeric():
 
@@ -282,6 +307,16 @@ while True:
                 })
 
                 writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
+
+                if homepage.text.startswith("<html><script>"):
+                    arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                    print("arg1="+arg1)
+                    ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                    print("acw_sc__v2="+ACWSCV2)
+                    acw = requests.cookies.RequestsCookieJar()
+                    acw.set("acw_sc__v2", ACWSCV2)
+                    hzmbus.cookies.update(acw)
+                    continue
 
                 SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
 
