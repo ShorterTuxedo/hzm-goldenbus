@@ -25,7 +25,7 @@ DATE = "1970-01-01" # 替代日期
 def ticket_success():
     global DATE
     print("Bought ticket")
-    myDates = bestDay
+    myDates = DATE
     myEmailContent = open("HZMB_Success_Email.html", "r", encoding="UTF-8").read()
     myEmailContent = myEmailContent.replace("[INSERT DATES HERE]", myDates)
     myEmailTContent = open("HZMB_Success_Email.txt", "r", encoding="UTF-8").read()
