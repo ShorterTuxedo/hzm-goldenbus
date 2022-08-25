@@ -359,36 +359,40 @@ while True:
                     writeLog("[验证码结果] 验证码结果为 " + result)
                 else:
                     result = ""
-
-                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
-                "ticketData": DATE,
-                "lineCode": ROUTE,
-                "startStationCode": START,
-                "endStationCode": END,
-                "boardingPointCode": START + "01",
-                "breakoutPointCode": END + "01",
-                "currency": "2",
-                "ticketCategory": "1",
-                "tickets": PASSENGERS,
-                "amount": TOTAL_PRICE * 100,
-                "feeType": 9,
-                "totalVoucherpay": 0,
-                "voucherNum": 0,
-                "voucherStr": "",
-                "totalBalpay": 0,
-                "totalNeedpay": TOTAL_PRICE * 100,
-                "bookBeginTime": bestTiming,
-                "bookEndTime": bestTiming,
-                "captcha": result,
-                "sessionId": "" if CAPTCHA == 1 else my_cap["sessionId"],
-                "sig": "" if CAPTCHA == 1 else my_cap["sig"],
-                "token": "" if CAPTCHA == 1 else my_cap["token"],
-                "timestamp": int(time.time()),
-                "appId": "HZMBWEB_HK",
-                "joinType": "WEB",
-                "version": "2.7.202207.1213",
-                "equipment": "PC"
-                })
+                while True:
+                    try:
+                        homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
+                        "ticketData": DATE,
+                        "lineCode": ROUTE,
+                        "startStationCode": START,
+                        "endStationCode": END,
+                        "boardingPointCode": START + "01",
+                        "breakoutPointCode": END + "01",
+                        "currency": "2",
+                        "ticketCategory": "1",
+                        "tickets": PASSENGERS,
+                        "amount": TOTAL_PRICE * 100,
+                        "feeType": 9,
+                        "totalVoucherpay": 0,
+                        "voucherNum": 0,
+                        "voucherStr": "",
+                        "totalBalpay": 0,
+                        "totalNeedpay": TOTAL_PRICE * 100,
+                        "bookBeginTime": bestTiming,
+                        "bookEndTime": bestTiming,
+                        "captcha": result,
+                        "sessionId": "" if CAPTCHA == 1 else my_cap["sessionId"],
+                        "sig": "" if CAPTCHA == 1 else my_cap["sig"],
+                        "token": "" if CAPTCHA == 1 else my_cap["token"],
+                        "timestamp": int(time.time()),
+                        "appId": "HZMBWEB_HK",
+                        "joinType": "WEB",
+                        "version": "2.7.202207.1213",
+                        "equipment": "PC"
+                        }, timeout=1)
+                        break
+                    except requests.exceptions.RequestException as e:
+                        pass
 
                 writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
 
