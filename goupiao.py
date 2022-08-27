@@ -99,6 +99,8 @@ if homepage.text.startswith("<html><script>"):
     acw.set("acw_sc__v2", ACWSCV2)
     hzmbus.cookies.update(acw)
 
+hzmbus.get("https://i.hzmbus.com/", headers=headers)
+
 headers = {
     "accept": "application/json, text/plain, */*",
     "accept-language": "zh-CN,zh;q=0.9",
