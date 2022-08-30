@@ -127,7 +127,7 @@ homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, j
     "joinType":"WEB",
     "version":"2.7.202207.1213",
     "equipment":"PC"
-    })
+    });print(homepage.text)
 
 BUS_STOPS = {
     "ZHO": "珠海",
@@ -194,7 +194,7 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if (not FINISHEDCAPTCHA) and (((weekday == 1) and (now.hour == 19 and (now.minute >= 50 and now.minute <= 59))) and CAPTCHA == 2):
+    if CAPTCHA == 2:
         FINISHEDCAPTCHA = True
         referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
         referrerURL = parse.quote_plus(referrerURL)
@@ -213,7 +213,7 @@ while True:
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-            })
+            });print(homepage.text)
 
             if homepage.text.startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
@@ -223,6 +223,8 @@ while True:
                 acw = requests.cookies.RequestsCookieJar()
                 acw.set("acw_sc__v2", ACWSCV2)
                 hzmbus.cookies.update(acw)
+                continue
+            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
                 continue
 
             PRICES = homepage.json()
@@ -258,6 +260,8 @@ while True:
                                 acw.set("acw_sc__v2", ACWSCV2)
                                 hzmbus.cookies.update(acw)
                                 result = None
+                                continue
+                            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
                                 continue
                         except Exception:
                             pass
@@ -312,10 +316,21 @@ while True:
                         "version": "2.7.202207.1213",
                         "equipment": "PC"
                         }, timeout=1)
+                        if homepage.text.startswith("<html><script>"):
+                            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                            print("arg1="+arg1)
+                            ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                            print("acw_sc__v2="+ACWSCV2)
+                            acw = requests.cookies.RequestsCookieJar()
+                            acw.set("acw_sc__v2", ACWSCV2)
+                            hzmbus.cookies.update(acw)
+                            continue
+                        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+                            continue
+                        homepage.json()
                         break
-                    except requests.exceptions.RequestException as e:
+                    except Exception as e:
                         pass
-
                 writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
 
                 if homepage.text.startswith("<html><script>"):

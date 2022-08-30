@@ -119,15 +119,34 @@ headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 }
 
-homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, json={
-    "webUserid": info["uname"],
-    "passWord": info["pwd"],
-    "code":"",
-    "appId":"HZMBWEB_HK",
-    "joinType":"WEB",
-    "version":"2.7.202207.1213",
-    "equipment":"PC"
-    })
+while True:
+    try:
+        homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, json={
+            "webUserid": info["uname"],
+            "passWord": info["pwd"],
+            "code":"",
+            "appId":"HZMBWEB_HK",
+            "joinType":"WEB",
+            "version":"2.7.202207.1213",
+            "equipment":"PC"
+            });print(homepage.text)#;time.sleep(3)
+
+        if homepage.text.startswith("<html><script>"):
+            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+            print("arg1="+arg1)
+            ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+            print("acw_sc__v2="+ACWSCV2)
+            acw = requests.cookies.RequestsCookieJar()
+            acw.set("acw_sc__v2", ACWSCV2)
+            hzmbus.cookies.update(acw)
+            continue
+        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+            continue
+
+        headers["Authorization"] = homepage.json()["jwt"]
+        break
+    except Exception:
+        pass
 
 BUS_STOPS = {
     "ZHO": "珠海",
@@ -136,8 +155,6 @@ BUS_STOPS = {
 }
 
 # print(homepage.json())
-
-headers["Authorization"] = homepage.json()["jwt"]
 
 writeLog("[已登录] 完成登陆流程。")
 
@@ -195,7 +212,7 @@ while True:
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if (not FINISHEDCAPTCHA) and (((weekday == 1) and (now.hour == 19 and (now.minute >= 50 and now.minute <= 59))) and CAPTCHA == 2):
+    if CAPTCHA == 2:
         FINISHEDCAPTCHA = True
         referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
         referrerURL = parse.quote_plus(referrerURL)
@@ -230,7 +247,7 @@ while True:
                         "joinType":"WEB",
                         "version":"2.7.202207.1213",
                         "equipment":"PC"
-                    })
+                    });print(homepage.text)
                     if homepage.text.startswith("<html><script>"):
                         arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
                         print("arg1="+arg1)
@@ -239,6 +256,8 @@ while True:
                         acw = requests.cookies.RequestsCookieJar()
                         acw.set("acw_sc__v2", ACWSCV2)
                         hzmbus.cookies.update(acw)
+                        continue
+                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")
@@ -261,7 +280,7 @@ while True:
                         "joinType":"WEB",
                         "version":"2.7.202207.1213",
                         "equipment":"PC"
-                    })
+                    });print(homepage.text)
                     if homepage.text.startswith("<html><script>"):
                         arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
                         print("arg1="+arg1)
@@ -270,6 +289,8 @@ while True:
                         acw = requests.cookies.RequestsCookieJar()
                         acw.set("acw_sc__v2", ACWSCV2)
                         hzmbus.cookies.update(acw)
+                        continue
+                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")
@@ -340,6 +361,9 @@ while True:
                                 hzmbus.cookies.update(acw)
                                 result = None
                                 continue
+                            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+                                result = None
+                                continue
                         except Exception:
                             pass
 
@@ -392,8 +416,20 @@ while True:
                         "version": "2.7.202207.1213",
                         "equipment": "PC"
                         }, timeout=1)
+                        if homepage.text.startswith("<html><script>"):
+                            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                            print("arg1="+arg1)
+                            ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                            print("acw_sc__v2="+ACWSCV2)
+                            acw = requests.cookies.RequestsCookieJar()
+                            acw.set("acw_sc__v2", ACWSCV2)
+                            hzmbus.cookies.update(acw)
+                            continue
+                        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+                            continue
+                        homepage.json()
                         break
-                    except requests.exceptions.RequestException as e:
+                    except Exception as e:
                         pass
 
                 writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
