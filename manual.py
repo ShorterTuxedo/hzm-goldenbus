@@ -141,6 +141,8 @@ while True:
             hzmbus.cookies.update(acw)
             continue
         elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+            if ("操作频繁" in homepage.text):
+                time.sleep(60)
             continue
 
         headers["Authorization"] = homepage.json()["jwt"]
@@ -242,6 +244,8 @@ while True:
                 hzmbus.cookies.update(acw)
                 continue
             elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+                if ("操作频繁" in homepage.text):
+                    time.sleep(60)
                 continue
 
             PRICES = homepage.json()
@@ -280,6 +284,8 @@ while True:
                                 continue
                             elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
                                 result = None
+                                if ("操作频繁" in homepage.text):
+                                    time.sleep(60)
                                 continue
                         except Exception:
                             pass
@@ -345,6 +351,8 @@ while True:
                     hzmbus.cookies.update(acw)
                     continue
                 elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text):
+                    if ("操作频繁" in homepage.text):
+                        time.sleep(60)
                     continue
 
                 SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
