@@ -211,13 +211,6 @@ while True:
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if CAPTCHA == 2:
-        FINISHEDCAPTCHA = True
-        referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
-        referrerURL = parse.quote_plus(referrerURL)
-        my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
-        if my_cap == None:
-            break
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
             my_cap = {"sessionId": "", "sig": "", "token": ""}
@@ -353,6 +346,13 @@ while True:
                     writeLog("[验证码结果] 验证码结果为 " + result)
                 else:
                     result = ""
+                    if CAPTCHA == 2:
+                        FINISHEDCAPTCHA = True
+                        referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
+                        referrerURL = parse.quote_plus(referrerURL)
+                        my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                        if my_cap == None:
+                            break
                 while True:
                     try:
                         homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
@@ -418,7 +418,7 @@ while True:
                     ticket_success()
                     break
                 else:
-                    if homepage.json().get("message", "无信息") == "验证码不正确":
+                    if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
                         writeLog("[哎呀] 没能够搞定验证码。")
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
