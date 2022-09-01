@@ -72,6 +72,21 @@ def writeLog(text):
   log.write(myLog)
   log.close()
 
+myHeaders = [[None, {}] for i in range(len(info["monitors"]))] # 多账号查询余票
+rateLimited = [None for i in range(len(info["monitors"]))] # 多账号查询余票
+allRate = [True for i in range(len(info["monitors"]))]
+
+def checkAll():
+    global rateLimited
+    for rateLimit in rateLimited:
+        if rateLimit == None:
+            return False
+        if time.time() - rateLimit > 60:
+            return False
+    return True
+
+mainAccHeaders = {}
+
 headers = {
     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "accept-language": "zh-CN,zh;q=0.9",
@@ -158,7 +173,100 @@ BUS_STOPS = {
 
 # print(homepage.json())
 
-writeLog("[已登录] 完成登陆流程。")
+writeLog("[已登录] 主账号完成登陆流程。")
+
+mainAccHeaders = headers
+mainHzmbus = hzmbus
+
+IndexMonitor = 0
+
+time_wait = (61 / (10 * len(info["monitors"])))
+
+for ACC in info["monitors"]:
+    headers = {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "sec-ch-ua": "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+    }
+
+    hzmbus = requests.Session()
+
+    # writeLog("="*20+"开始运行 (自动选日期)"+"="*20)
+
+    homepage = hzmbus.get("https://i.hzmbus.com/webhtml/login", headers=headers)
+
+    if homepage.text.startswith("<html><script>"):
+        arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+        print("arg1="+arg1)
+        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+        print("acw_sc__v2="+ACWSCV2)
+        acw = requests.cookies.RequestsCookieJar()
+        acw.set("acw_sc__v2", ACWSCV2)
+        hzmbus.cookies.update(acw)
+
+    hzmbus.get("https://i.hzmbus.com/", headers=headers)
+        
+    headers = {
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "zh-CN,zh;q=0.9",
+        "authorization": "",
+        "content-type": "application/json;charset=UTF-8",
+        "sec-ch-ua": "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\"",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "\"Linux\"",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-origin",
+        "Referer": "https://i.hzmbus.com/webhtml/login",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+    }
+
+    while True:
+        try:
+            homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, json={
+                "webUserid": ACC["uname"],
+                "passWord": ACC["pwd"],
+                "code":"",
+                "appId":"HZMBWEB_HK",
+                "joinType":"WEB",
+                "version":"2.7.202207.1213",
+                "equipment":"PC"
+                });print(homepage.text)#;time.sleep(3)
+
+            if homepage.text.startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                print("arg1="+arg1)
+                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                print("acw_sc__v2="+ACWSCV2)
+                acw = requests.cookies.RequestsCookieJar()
+                acw.set("acw_sc__v2", ACWSCV2)
+                hzmbus.cookies.update(acw)
+                continue
+            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                    time.sleep(60)
+                continue
+
+            headers["Authorization"] = homepage.json()["jwt"]
+            break
+        except Exception:
+            pass
+    
+    # print(homepage.json())
+
+    writeLog(f"[已登录] 账号 {IndexMonitor} 完成登陆流程。")
+
+    myHeaders[IndexMonitor] = [hzmbus, headers]
+    IndexMonitor += 1
 
 ROUTE = info["route"]
 
@@ -229,8 +337,22 @@ while True:
                 DAYS_UNTIL_NEXT_TUESDAY = datetime.timedelta( (1-datetime.datetime.today().weekday()) % 7 ).days
                 if DAYS_UNTIL_NEXT_TUESDAY == 0:
                     DAYS_UNTIL_NEXT_TUESDAY = 7
+                DAYS_UNTIL_NEXT_TUESDAY += 5
+                writeLog("[监控] 您有 " + str(len(info["monitors"])) + " 个账号，每次刷票约需等 " + str(int(time_wait * DAYS_UNTIL_NEXT_TUESDAY * 1)) + " 秒。")
                 day = 0
+                accNum = 0
                 while True:
+                    if rateLimited[accNum] != None:
+                        if time.time() - rateLimited[accNum] <= 60:
+                            writeLog(f"[已限速] 账号 {accNum} 已被限速。")
+                            accNum += 1
+                            accNum = accNum % len(myHeaders)
+                            continue
+                        else:
+                            rateLimited[accNum] = None
+                    hzmbus = myHeaders[accNum][0]
+                    header = myHeaders[accNum][1]
+                    writeLog(f"[查询] 正在使用账号 {accNum} 查询余票。")
                     if day > DAYS_UNTIL_NEXT_TUESDAY:
                         break
                     DATE = DATE_CHECKER.strftime(DF)
@@ -243,6 +365,7 @@ while True:
                         "version":"2.7.202207.1213",
                         "equipment":"PC"
                     });print(homepage.text)
+                    #time.sleep(time_wait)
                     if homepage.text.startswith("<html><script>"):
                         arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
                         print("arg1="+arg1)
@@ -252,9 +375,15 @@ while True:
                         acw.set("acw_sc__v2", ACWSCV2)
                         hzmbus.cookies.update(acw)
                         continue
+                    if "操作频繁" not in homepage.text:
+                        rateLimited[accNum] = None
                     elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and checkAll():
                             time.sleep(60)
+                        else:
+                            rateLimited[accNum] = time.time()
+                            accNum += 1
+                            accNum = accNum % len(myHeaders)
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")
@@ -278,6 +407,7 @@ while True:
                         "version":"2.7.202207.1213",
                         "equipment":"PC"
                     });print(homepage.text)
+                    time.sleep(time_wait)
                     if homepage.text.startswith("<html><script>"):
                         arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
                         print("arg1="+arg1)
@@ -287,9 +417,15 @@ while True:
                         acw.set("acw_sc__v2", ACWSCV2)
                         hzmbus.cookies.update(acw)
                         continue
+                    if "操作频繁" not in homepage.text:
+                        rateLimited[accNum] = None
                     elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and (checkAll()):
                             time.sleep(60)
+                        else:
+                            rateLimited[accNum] = time.time()
+                            accNum += 1
+                            accNum = accNum % len(myHeaders)
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")
@@ -333,6 +469,8 @@ while True:
                         bestDate = DATE
                         bestBestTiming = bestTiming
                     day += 1
+                    # accNum += 1
+                    # accNum = accNum % len(myHeaders)
                     DATE_CHECKER += datetime.timedelta(days=1)
                 if lastNumPeople == 0:
                     writeLog("[抱歉] 暂无可用日期。")
@@ -342,6 +480,8 @@ while True:
                     gotTicket = True
             DATE = bestDate
             bestTiming = bestBestTiming
+            headers = mainAccHeaders
+            hzmbus = mainHzmbus
             while True:
                 if CAPTCHA == 1:
                     result = None
