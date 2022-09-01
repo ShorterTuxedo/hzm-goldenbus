@@ -155,8 +155,8 @@ while True:
             acw.set("acw_sc__v2", ACWSCV2)
             hzmbus.cookies.update(acw)
             continue
-        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-            if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+            if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                 time.sleep(60)
             continue
 
@@ -251,8 +251,8 @@ for ACC in info["monitors"]:
                 acw.set("acw_sc__v2", ACWSCV2)
                 hzmbus.cookies.update(acw)
                 continue
-            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                     time.sleep(60)
                 continue
 
@@ -377,10 +377,10 @@ while True:
                         continue
                     if "操作频繁" not in homepage.text:
                         rateLimited[accNum] = None
-                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and checkAll():
+                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                        if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text) and checkAll():
                             time.sleep(60)
-                        elif ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                        elif ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                             rateLimited[accNum] = time.time()
                             accNum += 1
                             accNum = accNum % len(myHeaders)
@@ -419,10 +419,10 @@ while True:
                         continue
                     if "操作频繁" not in homepage.text:
                         rateLimited[accNum] = None
-                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                        if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and (checkAll()):
+                    elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                        if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text) and (checkAll()):
                             time.sleep(60)
-                        elif ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                        elif ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                             rateLimited[accNum] = time.time()
                             accNum += 1
                             accNum = accNum % len(myHeaders)
@@ -500,9 +500,9 @@ while True:
                                 hzmbus.cookies.update(acw)
                                 result = None
                                 continue
-                            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                                 result = None
-                                if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                                if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                                     time.sleep(60)
                                 continue
                         except Exception:
@@ -573,8 +573,8 @@ while True:
                             acw.set("acw_sc__v2", ACWSCV2)
                             hzmbus.cookies.update(acw)
                             continue
-                        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
-                            if ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
+                        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                            if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
                                 time.sleep(60)
                             continue
                         homepage.json()
