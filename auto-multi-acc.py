@@ -380,7 +380,7 @@ while True:
                     elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
                         if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and checkAll():
                             time.sleep(60)
-                        else:
+                        elif ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
                             rateLimited[accNum] = time.time()
                             accNum += 1
                             accNum = accNum % len(myHeaders)
@@ -422,7 +422,7 @@ while True:
                     elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
                         if ("操作频繁" in homepage.text or "502 Bad" in homepage.text) and (checkAll()):
                             time.sleep(60)
-                        else:
+                        elif ("操作频繁" in homepage.text or "502 Bad" in homepage.text):
                             rateLimited[accNum] = time.time()
                             accNum += 1
                             accNum = accNum % len(myHeaders)
