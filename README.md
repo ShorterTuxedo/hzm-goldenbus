@@ -1,19 +1,20 @@
-# 本项目暂停维护。
-----------
+# **NEW!** 新添加多账号查询功能。
+# 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium，无需提前手动输入轨迹。
+
+-------------
 
 # 港珠澳大桥穿梭巴士车票自动抢票机器人
     可是... 香港没有沃尔玛呀！
 ----------
 
 本程序抢不到已售罄日期的票源。
+# 請將電腦的時間設置成香港/中國標準時間，否則程序將無法正常運行。
 # 注：程序有时卡顿并非程序问题，而是购票系统问题！
 # 如果各位可以优化脚本，欢迎复刻本仓库对代码作出修改！
 
 # 回国攻略看 https://hk.trip.com/blog/zhuhai-quarantine-hotels/
 
 ### 注：金巴系统发票前（星期二 网晚上8点整）会使用滑块验证，正在研究滑块验证，如果可避免就避免滑块，直接使用文字。
-
-### 更新：已找到滑块验证方式，打开 guiji.html 获取轨迹。如果遇上与 “JWT” 有关的错误，请重新运行程序。
 
 ### 如果您希望通过深圳回国，请看 https://github.com/Algortex/jkyz_yaohao
 
@@ -48,7 +49,7 @@
 
 ## 使用程序前须知
 
-程序仅在Python 3.8, Ubuntu 20.04 LTS 的操作系统与 Python版本上测试过。其他平台未测试过。程序无需屏幕，无需 BeautifulSoup / LXML。
+程序仅在Python 3.8, Ubuntu 20.04 LTS / Python 3.7, Windows 10/11 的操作系统与 Python版本上测试过。其他平台未测试过。程序可能需要屏幕。
 
 程序的依赖项可通过 `pip install -r requirements.txt` 安装，国内用户推荐添加 `-i https://pypi.douban.com/simple` 后缀。
 
