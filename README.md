@@ -1,5 +1,5 @@
 # **NEW!** 新添加多账号查询功能。
-# 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium。
+# 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium，无需提前手动输入轨迹。
 
 -------------
 
