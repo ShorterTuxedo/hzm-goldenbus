@@ -64,7 +64,12 @@ def captcha():
         from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
         options = Options()
         options.headless = True
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_argument('--disable-blink-features=AutomationControlled')
         profile = webdriver.FirefoxProfile()
+        profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0")
         profile.set_preference("dom.webdriver.enabled", False)
         profile.set_preference('useAutomationExtension', False)
         profile.update_preferences()
