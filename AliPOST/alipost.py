@@ -61,6 +61,7 @@ def captcha():
     browser = None
     try:
         from selenium.webdriver.firefox.options import Options
+        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
         options = Options()
         options.headless = True
         profile = webdriver.FirefoxProfile()
