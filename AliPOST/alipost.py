@@ -60,22 +60,6 @@ def captcha():
     print("Stage 1 done.")
     browser = None
     try:
-        from selenium.webdriver.firefox.options import Options
-        from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-        options = Options()
-        options.headless = True
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument('--disable-blink-features=AutomationControlled')
-        profile = webdriver.FirefoxProfile()
-        profile.set_preference("general.useragent.override", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0")
-        profile.set_preference("dom.webdriver.enabled", False)
-        profile.set_preference('useAutomationExtension', False)
-        profile.update_preferences()
-        desired = DesiredCapabilities.FIREFOX
-        browser = webdriver.Firefox(options=options,firefox_profile=profile, desired_capabilities=desired)
-    except Exception:
         myRandomChromeUA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36"
         print("Your useragent is", myRandomChromeUA, ".")
         options = webdriver.ChromeOptions()
@@ -86,6 +70,9 @@ def captcha():
         browser = webdriver.Chrome(options=options)
         # 调用函数在页面加载前执行脚本
         browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': stealthminjs})
+    except Exception as e:
+        print("失败")
+        return '{"sessionId":"","sig":"","token":""}'
     browser.get(os.path.abspath("guiji.html"))
     slideBtn = browser.find_element_by_css_selector(".btn_slide")
     slideOffsetWidth = browser.execute_script("return (document.querySelector(\".nc_scale\").clientWidth - document.querySelector(\".nc_iconfont\").clientWidth);")
