@@ -2,3 +2,4 @@ selenium<4.3.0
 Flask
 requests
 ddddocr
+pyvirtualdisplay
