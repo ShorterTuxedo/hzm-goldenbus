@@ -308,7 +308,7 @@ while True:
                             bestTiming = TIME.get("beginTime", "00:00:00")
                             numPeople = TIME.get("maxPeople", 0)
                         else:
-                            if TIME.get("maxPeople", 0) < numPeople:
+                            if TIME.get("maxPeople", 0) > numPeople:
                                 bestTiming = TIME.get("beginTime", "00:00:00")
                                 numPeople = TIME.get("maxPeople", 0)
 
