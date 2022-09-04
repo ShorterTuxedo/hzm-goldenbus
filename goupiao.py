@@ -290,7 +290,7 @@ while True:
                     bestTiming = TIME["beginTime"]
                     numPeople = TIME["maxPeople"]
                 else:
-                    if TIME["maxPeople"] < numPeople:
+                    if TIME["maxPeople"] > numPeople:
                         bestTiming = TIME["beginTime"]
                         numPeople = TIME["maxPeople"]
 
