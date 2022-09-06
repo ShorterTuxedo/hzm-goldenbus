@@ -119,15 +119,36 @@ headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
 }
 
-homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, json={
-    "webUserid": info["uname"],
-    "passWord": info["pwd"],
-    "code":"",
-    "appId":"HZMBWEB_HK",
-    "joinType":"WEB",
-    "version":"2.7.202207.1213",
-    "equipment":"PC"
-    });print(homepage.text)
+while True:
+    try:
+        homepage = hzmbus.post("https://i.hzmbus.com/webh5api/login", headers=headers, json={
+            "webUserid": info["uname"],
+            "passWord": info["pwd"],
+            "code":"",
+            "appId":"HZMBWEB_HK",
+            "joinType":"WEB",
+            "version":"2.7.202207.1213",
+            "equipment":"PC"
+            });print(homepage.text)#;time.sleep(3)
+
+        if homepage.text.startswith("<html><script>"):
+            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+            print("arg1="+arg1)
+            ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+            print("acw_sc__v2="+ACWSCV2)
+            acw = requests.cookies.RequestsCookieJar()
+            acw.set("acw_sc__v2", ACWSCV2)
+            hzmbus.cookies.update(acw)
+            continue
+        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+            if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                time.sleep(60)
+            continue
+
+        headers["Authorization"] = homepage.json()["jwt"]
+        break
+    except Exception:
+        pass
 
 BUS_STOPS = {
     "ZHO": "珠海",
