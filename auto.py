@@ -129,7 +129,7 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });print(str(homepage.content, encoding="UTF-8"));homepage.json()#;time.sleep(3)
+            });print(str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -235,31 +235,37 @@ while True:
                         break
                     DATE = DATE_CHECKER.strftime(DF)
                     writeLog(f"[购票中] 正在购买 日期 {DATE}，从 {BUS_STOPS[START]} => 往 {BUS_STOPS[END]} 车次的车票。")
-                    homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
-                        "buyDate":DATE,
-                        "lineCode":ROUTE,
-                        "appId":"HZMBWEB_HK",
-                        "joinType":"WEB",
-                        "version":"2.7.202207.1213",
-                        "equipment":"PC"
-                    });print(str(homepage.content, encoding="UTF-8"));homepage.json()
-                    if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-                        arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-                        print("arg1="+arg1)
-                        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-                        print("acw_sc__v2="+ACWSCV2)
-                        acw = requests.cookies.RequestsCookieJar()
-                        acw.set("acw_sc__v2", ACWSCV2)
-                        hzmbus.cookies.update(acw)
-                        continue
-                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                        if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                            time.sleep(60)
-                        continue
-                    if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
-                        writeLog("[被限速] 要等一会儿。")
-                        # time.sleep(30*60) # 等 30 分
-                        continue
+                    while True:
+                        try:
+                            homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
+                                "buyDate":DATE,
+                                "lineCode":ROUTE,
+                                "appId":"HZMBWEB_HK",
+                                "joinType":"WEB",
+                                "version":"2.7.202207.1213",
+                                "equipment":"PC"
+                            });print(str(homepage.content, encoding="UTF-8"))
+                            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                                print("arg1="+arg1)
+                                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                                print("acw_sc__v2="+ACWSCV2)
+                                acw = requests.cookies.RequestsCookieJar()
+                                acw.set("acw_sc__v2", ACWSCV2)
+                                hzmbus.cookies.update(acw)
+                                continue
+                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                                    time.sleep(60)
+                                continue
+                            if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
+                                writeLog("[被限速] 要等一会儿。")
+                                # time.sleep(30*60) # 等 30 分
+                                continue
+                            homepage.json()
+                            break
+                        except Exception:
+                            continue
                     
                     PRICES = homepage.json()
 
@@ -269,32 +275,37 @@ while True:
                     TOTAL_PRICE = (ADULTS * ADULT_PRICE) + (KIDS * KID_PRICE)
 
                     TOTAL_PRICE = int(TOTAL_PRICE)
-
-                    homepage = hzmbus.post("https://i.hzmbus.com/webh5api/manage/query.book.info.data", headers=headers, json={
-                        "bookDate":DATE,
-                        "lineCode":ROUTE,
-                        "appId":"HZMBWEB_HK",
-                        "joinType":"WEB",
-                        "version":"2.7.202207.1213",
-                        "equipment":"PC"
-                    });print(str(homepage.content, encoding="UTF-8"));homepage.json()
-                    if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-                        arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-                        print("arg1="+arg1)
-                        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-                        print("acw_sc__v2="+ACWSCV2)
-                        acw = requests.cookies.RequestsCookieJar()
-                        acw.set("acw_sc__v2", ACWSCV2)
-                        hzmbus.cookies.update(acw)
-                        continue
-                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                        if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                            time.sleep(60)
-                        continue
-                    if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
-                        writeLog("[被限速] 要等一会儿。")
-                        # time.sleep(30*60) # 等 30 分
-                        continue
+                    while True:
+                        try:
+                            homepage = hzmbus.post("https://i.hzmbus.com/webh5api/manage/query.book.info.data", headers=headers, json={
+                                "bookDate":DATE,
+                                "lineCode":ROUTE,
+                                "appId":"HZMBWEB_HK",
+                                "joinType":"WEB",
+                                "version":"2.7.202207.1213",
+                                "equipment":"PC"
+                            });print(str(homepage.content, encoding="UTF-8"))
+                            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                                print("arg1="+arg1)
+                                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                                print("acw_sc__v2="+ACWSCV2)
+                                acw = requests.cookies.RequestsCookieJar()
+                                acw.set("acw_sc__v2", ACWSCV2)
+                                hzmbus.cookies.update(acw)
+                                continue
+                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                                    time.sleep(60)
+                                continue
+                            if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
+                                writeLog("[被限速] 要等一会儿。")
+                                # time.sleep(30*60) # 等 30 分
+                                continue
+                            homepage.json()
+                            break
+                        except Exception:
+                            continue
 
                     TIMES = homepage.json()["responseData"]
 

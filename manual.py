@@ -129,7 +129,7 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });print(str(homepage.content, encoding="UTF-8"));homepage.json()#;time.sleep(3)
+            });print(str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -218,28 +218,34 @@ while True:
             my_cap = {"sessionId": "", "sig": "", "token": ""}
         while True:
             writeLog(f"[购票中] 正在购买 {BUS_STOPS[START]} => {BUS_STOPS[END]} 车次的车票。")
-            homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
-                "buyDate":DATE,
-                "lineCode":ROUTE,
-                "appId":"HZMBWEB_HK",
-                "joinType":"WEB",
-                "version":"2.7.202207.1213",
-                "equipment":"PC"
-            });print(str(homepage.content, encoding="UTF-8"));homepage.json()
+            while True:
+                try:
+                    homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
+                        "buyDate":DATE,
+                        "lineCode":ROUTE,
+                        "appId":"HZMBWEB_HK",
+                        "joinType":"WEB",
+                        "version":"2.7.202207.1213",
+                        "equipment":"PC"
+                    });print(str(homepage.content, encoding="UTF-8"))
 
-            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-                print("arg1="+arg1)
-                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-                print("acw_sc__v2="+ACWSCV2)
-                acw = requests.cookies.RequestsCookieJar()
-                acw.set("acw_sc__v2", ACWSCV2)
-                hzmbus.cookies.update(acw)
-                continue
-            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                    time.sleep(60)
-                continue
+                    if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                        arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                        print("arg1="+arg1)
+                        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                        print("acw_sc__v2="+ACWSCV2)
+                        acw = requests.cookies.RequestsCookieJar()
+                        acw.set("acw_sc__v2", ACWSCV2)
+                        hzmbus.cookies.update(acw)
+                        continue
+                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                        if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                            time.sleep(60)
+                        continue
+                    homepage.json()
+                    break
+                except Exception:
+                    continue
 
             PRICES = homepage.json()
 
