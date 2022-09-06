@@ -156,8 +156,6 @@ BUS_STOPS = {
     "HKG": "香港"
 }
 
-headers["Authorization"] = homepage.json()["jwt"]
-
 writeLog("[已登录] 完成登陆流程。")
 
 ROUTE = info["route"]
