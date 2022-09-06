@@ -337,7 +337,7 @@ while True:
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
     # writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
-    if (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400):
+    if ((now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400) and not FINISHEDCAPTCHA):
         CAPTCHA = 2
         if CAPTCHA == 2:
             FINISHEDCAPTCHA = True
