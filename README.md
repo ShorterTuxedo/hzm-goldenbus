@@ -1,6 +1,6 @@
 # **NEW!** 新添加多账号查询功能。
 # 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium，无需提前手动输入轨迹。
-
+# https://t.me/+0_rCi5AAPTRmMDM9
 -------------
 
 # 港珠澳大桥穿梭巴士车票自动抢票机器人
