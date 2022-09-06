@@ -90,8 +90,8 @@ writeLog("="*20+"开始运行"+"="*20)
 
 homepage = hzmbus.get("https://i.hzmbus.com/webhtml/login", headers=headers)
 
-if homepage.text.startswith("<html><script>"):
-    arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+    arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
     print("arg1="+arg1)
     ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
     print("acw_sc__v2="+ACWSCV2)
@@ -127,10 +127,10 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });print(homepage.text)#;time.sleep(3)
+            });print(str(homepage.content, encoding="UTF-8"));homepage.json()#;time.sleep(3)
 
-        if homepage.text.startswith("<html><script>"):
-            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+        if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+            arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
             print("arg1="+arg1)
             ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
             print("acw_sc__v2="+ACWSCV2)
@@ -138,8 +138,8 @@ while True:
             acw.set("acw_sc__v2", ACWSCV2)
             hzmbus.cookies.update(acw)
             continue
-        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
-            if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+        elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+            if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                 time.sleep(60)
             continue
 
@@ -223,9 +223,9 @@ while True:
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-            });print(homepage.text)
-            if homepage.text.startswith("<html><script>"):
-                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+            });print(str(homepage.content, encoding="UTF-8"));homepage.json()
+            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                 print("arg1="+arg1)
                 ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
                 print("acw_sc__v2="+ACWSCV2)
@@ -233,8 +233,8 @@ while True:
                 acw.set("acw_sc__v2", ACWSCV2)
                 hzmbus.cookies.update(acw)
                 continue
-            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
-                if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                     time.sleep(60)
                 continue
             PRICES = homepage.json()
@@ -258,9 +258,9 @@ while True:
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-            });print(homepage.text)
-            if homepage.text.startswith("<html><script>"):
-                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+            });print(str(homepage.content, encoding="UTF-8"));homepage.json()
+            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                 print("arg1="+arg1)
                 ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
                 print("acw_sc__v2="+ACWSCV2)
@@ -268,8 +268,8 @@ while True:
                 acw.set("acw_sc__v2", ACWSCV2)
                 hzmbus.cookies.update(acw)
                 continue
-            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
-                if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                     time.sleep(60)
                 continue
             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
@@ -311,8 +311,8 @@ while True:
                     while result == None:
                         homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
                         try:
-                            if homepage.text.startswith("<html><script>"):
-                                arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                                 print("arg1="+arg1)
                                 ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
                                 print("acw_sc__v2="+ACWSCV2)
@@ -321,9 +321,9 @@ while True:
                                 hzmbus.cookies.update(acw)
                                 result = None
                                 continue
-                            elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                                 result = None
-                                if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                                if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                                     time.sleep(60)
                                 continue
                         except Exception:
@@ -384,8 +384,8 @@ while True:
                         "version": "2.7.202207.1213",
                         "equipment": "PC"
                         }, timeout=1)
-                        if homepage.text.startswith("<html><script>"):
-                            arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                        if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                            arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                             print("arg1="+arg1)
                             ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
                             print("acw_sc__v2="+ACWSCV2)
@@ -393,8 +393,8 @@ while True:
                             acw.set("acw_sc__v2", ACWSCV2)
                             hzmbus.cookies.update(acw)
                             continue
-                        elif ("系统异常" in homepage.text or "系统繁忙" in homepage.text) or ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
-                            if ("操作频繁" in homepage.text or "DTD HTML 2.0" in homepage.text):
+                        elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                            if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                                 time.sleep(60)
                             continue
                         homepage.json()
@@ -402,8 +402,8 @@ while True:
                     except Exception as e:
                         pass
                 writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
-                if homepage.text.startswith("<html><script>"):
-                    arg1 = acw_sc_v2.getArg1FromHTML(homepage.text)
+                if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                    arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                     print("arg1="+arg1)
                     ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
                     print("acw_sc__v2="+ACWSCV2)
