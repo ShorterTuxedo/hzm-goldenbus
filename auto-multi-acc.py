@@ -1,4 +1,5 @@
 import requests
+import threading
 import time
 import sys
 import datetime
@@ -11,6 +12,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from urllib import parse
+
+CM = False
 
 # 00 = 成人 , 01 = 儿童
 # 请使用港币支付
@@ -182,7 +185,11 @@ IndexMonitor = 0
 
 time_wait = (61 / (10 * len(info["monitors"])))
 
-for ACC in info["monitors"]:
+MyDones = [False for i in range(len(info["monitors"]))]
+
+MyAllDones = [True for i in range(len(info["monitors"]))]
+
+def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
     headers = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "accept-language": "zh-CN,zh;q=0.9",
@@ -266,7 +273,15 @@ for ACC in info["monitors"]:
     writeLog(f"[已登录] 账号 {IndexMonitor} 完成登陆流程。")
 
     myHeaders[IndexMonitor] = [hzmbus, headers]
-    IndexMonitor += 1
+    MyDones[IndexMonitor] = True
+
+myThreads = []
+for i in range(len(info["monitors"])):
+    myT = threading.Thread(target = LoginToAcc, args = (info["monitors"][i], i, myHeaders, MyDones))
+    myT.start()
+
+while MyDones != MyAllDones:
+    pass
 
 ROUTE = info["route"]
 
@@ -321,7 +336,16 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
-    writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
+    # writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
+    if (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400):
+        CAPTCHA = 2
+        if CAPTCHA == 2:
+            FINISHEDCAPTCHA = True
+            referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
+            referrerURL = parse.quote_plus(referrerURL)
+            my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+            if my_cap == None:
+                break
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
             my_cap = {"sessionId": "", "sig": "", "token": ""}
@@ -338,13 +362,20 @@ while True:
                 if DAYS_UNTIL_NEXT_TUESDAY == 0:
                     DAYS_UNTIL_NEXT_TUESDAY = 7
                 DAYS_UNTIL_NEXT_TUESDAY += 5
+                NEXTMONDAY = DATE_CHECKER + datetime.timedelta(days=(DAYS_UNTIL_NEXT_TUESDAY - 6))
+                if NEXTMONDAY >= DATE_CHECKER:
+                    DATE_CHECKER = NEXTMONDAY
+                    DAYS_UNTIL_NEXT_TUESDAY = 6
+                else:
+                    DAYS_UNTIL_NEXT_TUESDAY -= 1
                 writeLog("[监控] 您有 " + str(len(info["monitors"])) + " 个账号，每次刷票约需等 " + str(int(time_wait * DAYS_UNTIL_NEXT_TUESDAY * 1)) + " 秒。")
                 day = 0
                 accNum = 0
                 while True:
+                    myC = False
                     if rateLimited[accNum] != None:
                         if time.time() - rateLimited[accNum] <= 60:
-                            writeLog(f"[已限速] 账号 {accNum} 已被限速。")
+                            # writeLog(f"[已限速] 账号 {accNum} 已被限速。")
                             accNum += 1
                             accNum = accNum % len(myHeaders)
                             continue
@@ -386,7 +417,8 @@ while True:
                                     rateLimited[accNum] = time.time()
                                     accNum += 1
                                     accNum = accNum % len(myHeaders)
-                                continue
+                                myC = True
+                                break
                             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                                 writeLog("[被限速] 要等一会儿。")
                                 # time.sleep(30*60) # 等 30 分
@@ -396,6 +428,9 @@ while True:
                         except Exception:
                             continue
                     
+                    if myC:
+                        continue
+
                     PRICES = homepage.json()
 
                     ADULT_PRICE = PRICES["responseData"][0]["adultHKD"]
@@ -431,10 +466,11 @@ while True:
                                 if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")) and (checkAll()):
                                     time.sleep(60)
                                 elif ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                                    myC = True
                                     rateLimited[accNum] = time.time()
                                     accNum += 1
                                     accNum = accNum % len(myHeaders)
-                                continue
+                                break
                             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                                 writeLog("[被限速] 要等一会儿。")
                                 # time.sleep(30*60) # 等 30 分
@@ -443,6 +479,9 @@ while True:
                             break
                         except Exception:
                             continue
+
+                    if myC:
+                        continue
 
                     TIMES = homepage.json()["responseData"]
 
@@ -500,7 +539,6 @@ while True:
 
                     while result == None:
                         homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
-
                         try:
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -538,13 +576,6 @@ while True:
                     writeLog("[验证码结果] 验证码结果为 " + result)
                 else:
                     result = ""
-                    if CAPTCHA == 2:
-                        FINISHEDCAPTCHA = True
-                        referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
-                        referrerURL = parse.quote_plus(referrerURL)
-                        my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
-                        if my_cap == None:
-                            break
                 while True:
                     try:
                         homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
@@ -613,7 +644,17 @@ while True:
                     ticket_success()
                     break
                 else:
+                    if homepage.json().get("message", "无信息") == "验证码不能为空" and CAPTCHA == 2:
+                        writeLog("[图形验证] 验证码类型预测错误。")
+                        CM = True
+                        CAPTCHA = 1
+                        continue
                     if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
+                        if "会话ID" in homepage.json().get("message", "无信息") and CAPTCHA == 1:
+                            CAPTCHA = 2
+                            writeLog("[滑块验证] 验证码类型预测错误。")
+                            CM = True
+                            continue
                         writeLog("[哎呀] 没能够搞定验证码。")
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
