@@ -14,6 +14,7 @@ from email.header import Header
 from urllib import parse
 
 CM = False
+TIMESHUA = False
 
 # 00 = 成人 , 01 = 儿童
 # 请使用港币支付
@@ -325,6 +326,7 @@ eightPM = 20
 #dt=int()/1000-time.time()
 #print(dt)
 DF = "%Y-%m-%d"
+oldtime_wait = 0.01
 FINISHEDCAPTCHA = False
 writeLog("[提示] 等待中...")
 while True:
@@ -336,10 +338,14 @@ while True:
     hour = now.hour
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
-    # writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
+    # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
     if ((now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400) and not FINISHEDCAPTCHA):
         CAPTCHA = 2
+        writeLog("[滑块时间] 滑块时间到。")
         if CAPTCHA == 2:
+            TIMESHUA = True
+            oldtime_wait = time_wait
+            time_wait = 0.01
             FINISHEDCAPTCHA = True
             referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
             referrerURL = parse.quote_plus(referrerURL)
@@ -388,7 +394,7 @@ while True:
                         break
                     DATE = DATE_CHECKER.strftime(DF)
                     writeLog(f"[购票中] 正在购买 日期 {DATE}，从 {BUS_STOPS[START]} => 往 {BUS_STOPS[END]} 车次的车票。")
-                    while True:
+                    """while True:
                         try:
                             homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/query.line.ticket.price", headers=headers, json={
                                 "buyDate":DATE,
@@ -431,10 +437,10 @@ while True:
                     if myC:
                         continue
 
-                    PRICES = homepage.json()
+                    PRICES = homepage.json()"""
 
-                    ADULT_PRICE = PRICES["responseData"][0]["adultHKD"]
-                    KID_PRICE = PRICES["responseData"][0]["childrenHKD"]
+                    ADULT_PRICE = 65 # PRICES["responseData"][0]["adultHKD"]
+                    KID_PRICE = 33 # PRICES["responseData"][0]["childrenHKD"]
 
                     TOTAL_PRICE = (ADULTS * ADULT_PRICE) + (KIDS * KID_PRICE)
 
@@ -494,10 +500,16 @@ while True:
                             print(TIME)
                             bestTiming = TIME.get("beginTime", "00:00:00")
                             numPeople = TIME.get("maxPeople", 0)
+                            if numPeople > len(PASSENGERS):
+                                gotTicket = True
+                                break
                         else:
                             if TIME.get("maxPeople", 0) > numPeople:
                                 bestTiming = TIME.get("beginTime", "00:00:00")
                                 numPeople = TIME.get("maxPeople", 0)
+                            if numPeople > len(PASSENGERS):
+                                gotTicket = True
+                                break
 
                     #检查 乘客数量
 
@@ -527,8 +539,12 @@ while True:
                     writeLog("[抱歉] 暂无可用日期。")
                     # break
                 else:
-                    writeLog(f"[有票] 找到 {bestDate} {bestBestTiming} 车次的车票。")
+                    writeLog(f"[有票] 找到 {bestDate} {bestBestTiming} 班次的车票。")
                     gotTicket = True
+            if TIMESHUA:
+                TIMESHUA = False
+                time_wait = oldtime_wait
+                oldtime_wait = 0.01
             DATE = bestDate
             bestTiming = bestBestTiming
             headers = mainAccHeaders
