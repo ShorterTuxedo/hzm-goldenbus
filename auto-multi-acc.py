@@ -16,6 +16,8 @@ from urllib import parse
 CM = False
 TIMESHUA = False
 
+CWRONG = False
+
 # 00 = 成人 , 01 = 儿童
 # 请使用港币支付
 # 需要于 8：00 前几分钟运行。
@@ -590,8 +592,17 @@ while True:
                             result = None
 
                     writeLog("[验证码结果] 验证码结果为 " + result)
-                else:
+                elif CWRONG:
                     result = ""
+                    TIMESHUA = True
+                    oldtime_wait = time_wait
+                    time_wait = 0.01
+                    FINISHEDCAPTCHA = True
+                    referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
+                    referrerURL = parse.quote_plus(referrerURL)
+                    my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                    if my_cap == None:
+                        break
                 while True:
                     try:
                         homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
@@ -669,6 +680,7 @@ while True:
                         if "会话ID" in homepage.json().get("message", "无信息") and CAPTCHA == 1:
                             CAPTCHA = 2
                             writeLog("[滑块验证] 验证码类型预测错误。")
+                            CWRONG = True
                             CM = True
                             continue
                         writeLog("[哎呀] 没能够搞定验证码。")
