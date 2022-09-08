@@ -13,7 +13,6 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from urllib import parse
 
-CM = False
 TIMESHUA = False
 
 CWRONG = False
@@ -35,7 +34,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
     if info.get("autopay", False):
         AUTH = oheaders["Authorization"]
         headers = oheaders
-        while True:
+        """while True:
             try:
                 homepage = hzmbus.post("https://i.hzmbus.com/webh5api/manage/get.payment.type.info", headers=headers, json={
                     "appId": "HZMBWEB_HK",
@@ -66,8 +65,8 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                 homepage.json()
                 break
             except Exception:
-                continue
-        MASTERCARD = homepage.json()["responseData"][0]["payCode"] # 我们用万事达信用卡支付
+                continue"""
+        MASTERCARD = "MasterCard" # homepage.json()["responseData"][0]["payCode"] # 我们用万事达信用卡支付
         while True:
             try:
                 homepage = hzmbus.post("https://i.hzmbus.com/webh5api/wx/query.wx.order.payreq", headers=headers, json={
@@ -114,7 +113,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
             "payType": MASTERCARD
         }  
         beitsin = requests.Session() # 卑钱
-        headers = {
+        """headers = {
             "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             "accept-language": "zh-CN,zh;q=0.9",
             "sec-ch-ua": "\".Not/A)Brand\";v=\"99\", \"Google Chrome\";v=\"103\", \"Chromium\";v=\"103\"",
@@ -154,7 +153,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     continue
                 break
             except Exception:
-                continue
+                continue"""
         headers = {
             "accept": "application/json, text/plain, */*",
             "accept-language": "zh-CN,zh;q=0.9",
@@ -567,7 +566,7 @@ while True:
     weekday = now.weekday()
     my_cap = {"sessionId": "", "sig": "", "token": ""}
     # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
-    if ((now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400) and not FINISHEDCAPTCHA):
+    if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and not FINISHEDCAPTCHA):
         CAPTCHA = 2
         writeLog("[滑块时间] 滑块时间到。")
         if CAPTCHA == 2:
@@ -904,7 +903,6 @@ while True:
                 else:
                     if homepage.json().get("message", "无信息") == "验证码不能为空" and CAPTCHA == 2:
                         writeLog("[图形验证] 验证码类型预测错误。")
-                        CM = True
                         CAPTCHA = 1
                         continue
                     if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
@@ -912,7 +910,6 @@ while True:
                             CAPTCHA = 2
                             writeLog("[滑块验证] 验证码类型预测错误。")
                             CWRONG = True
-                            CM = True
                             continue
                         writeLog("[哎呀] 没能够搞定验证码。")
                         continue
