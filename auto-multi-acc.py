@@ -251,6 +251,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
         }
         myLBox = "https://mpgsproxy.hzmbus.com/checkout/lightboxEntry/" + paymentData["sessionId"]
+        writeLog(f"[支付链接] 如果您未检查电邮，支付链接在此：[{myLBox}]")
     print("Bought ticket")
     myDates = DATE
     myEmailContent = open("HZMB_Success_Email.html", "r", encoding="UTF-8").read()
