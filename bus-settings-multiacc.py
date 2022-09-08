@@ -64,6 +64,7 @@ time_ =  None
 myChoice = None
 track = ""
 monitors = []
+autopay = False
 
 while myChoice != "7":
     clearScreen()
@@ -79,6 +80,7 @@ while myChoice != "7":
     8. 设 置 出 发 时 间
     9. 输 入 轨 迹
     10. 添 加 余 票 账 号
+    11. 设 置 支 付 电 邮
     
     请 输 入 您 的 选 择：''', end="")
     myChoice = input()
@@ -98,6 +100,7 @@ while myChoice != "7":
             smtpport = info["smtpport"]
             smtppwd = info["smtppwd"]
             track = info.get("track", "")
+            autopay = info.get("autopay", False)
             monitors = info.get("monitors", [])
             print("        文 件 导 入 成 功！")
             input("按 【 回 车 】 键 返 回 ...")
@@ -142,6 +145,7 @@ while myChoice != "7":
         smtphost2 = "暂 无" if smtphost == "" else smtphost
         smtpport2 = "暂 无" if smtpport == None else smtpport
         track2 = "暂 无" if track == "" else track
+        autopay2 = "是" if autopay else "否"
         print("="*20+"信 息" + "="*20+f'''
         请 确 认 以 下 所 有 信 息 完 全 正 确 无 误 ，
         否 则 可 能 无 法 购 票 / 被 拒 登 车 ！
@@ -158,6 +162,7 @@ while myChoice != "7":
         SMTP 端 口：{smtpport2}
         验 证 码 轨 迹：{track2}
         余 票 账 号：{monitors2}
+        支 付 电 邮 开 启： {autopay2}
         ''')
         input("按 【 回 车 】 键 返 回 ...")
     if myChoice == "2":
@@ -263,7 +268,8 @@ while myChoice != "7":
                 "smtpport": smtpport,
                 "time": time_,
                 "track": track,
-                "monitors": monitors
+                "monitors": monitors,
+                "autopay": autopay
             }
         info_json = json.dumps(info, indent=2, ensure_ascii=False)
         with open("info.json", "w") as myinfofile:
@@ -292,3 +298,10 @@ while myChoice != "7":
         while pwda == None:
             pwda = input("        请 输 入 金 巴 登 录 密 码：")
         monitors.append({"uname": unam, "pwd": pwda})
+    if myChoice == "11":
+        clearScreen()
+        print("="*20+"设 置 支 付 电 邮" + "="*20)
+        autopay = None
+        while autopay != "Y" and autopay != "N":
+            autopay = input("        开 启 支 付 电 邮？(Y: 是，N: 否)：")
+        autopay = (autopay == "Y")
