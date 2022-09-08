@@ -395,7 +395,7 @@ while True:
                         "joinType": "WEB",
                         "version": "2.7.202207.1213",
                         "equipment": "PC"
-                        }, timeout=1)
+                        }, timeout=5)
                         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                             print("arg1="+arg1)
