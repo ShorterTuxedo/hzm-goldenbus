@@ -12,6 +12,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from urllib import parse
+import os 
+
+try:
+    os.remove("log.txt") # 节省空间
+except Exception:
+    pass
 
 TIMESHUA = False
 
