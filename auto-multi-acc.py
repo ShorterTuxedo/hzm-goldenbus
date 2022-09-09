@@ -598,11 +598,9 @@ while True:
                     DAYS_UNTIL_NEXT_TUESDAY = 7
                 DAYS_UNTIL_NEXT_TUESDAY += 5
                 NEXTMONDAY = DATE_CHECKER + datetime.timedelta(days=(DAYS_UNTIL_NEXT_TUESDAY - 6))
-                if NEXTMONDAY >= DATE_CHECKER:
+                if NEXTMONDAY >= DATE_CHECKER and DATE_CHECKER.weekday() == 1:
                     DATE_CHECKER = NEXTMONDAY
                     DAYS_UNTIL_NEXT_TUESDAY = 6
-                else:
-                    DAYS_UNTIL_NEXT_TUESDAY -= 1
                 writeLog("[监控] 您有 " + str(len(info["monitors"])) + " 个账号，每次刷票约需等 " + str(int(time_wait * DAYS_UNTIL_NEXT_TUESDAY * 1)) + " 秒。")
                 day = 0
                 accNum = 0
