@@ -42,7 +42,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     "joinType": "WEB",
                     "version": "2.7.202207.1213",
                     "equipment": "PC"
-                });print(str(homepage.content, encoding="UTF-8"))
+                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -79,7 +79,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     "joinType":"WEB",
                     "version":"2.7.202207.1213",
                     "equipment":"PC"
-                    });print(str(homepage.content, encoding="UTF-8"))
+                    });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -128,7 +128,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
         }
         while True:
             try:
-                homepage = beitsin.get("https://mpgsproxy.hzmbus.com/checkout/hostedCheckout", headers=headers);print(str(homepage.content, encoding="UTF-8"))
+                homepage = beitsin.get("https://mpgsproxy.hzmbus.com/checkout/hostedCheckout", headers=headers);writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -179,7 +179,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     'interaction.cancelUrl': 'urn:hostedCheckout:defaultCancelUrl',
                     'interaction.timeoutUrl': 'urn:hostedCheckout:defaultTimeoutUrl',
                     'session.id': paymentData["sessionId"],
-                });print(str(homepage.content, encoding="UTF-8"))
+                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -210,7 +210,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                 homepage = beitsin.post(myRetURL, headers=headers, data={
                     "merchantId": paymentData["merchant"],
                     "returnUrl": "https://i.hzmbus.com/webhtml/order_details?orderNo="+paymentData["orderNo"]+"&tab1=1"
-                });print(str(homepage.content, encoding="UTF-8"))
+                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -375,7 +375,7 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });print(str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -475,7 +475,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-                });print(str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -630,7 +630,7 @@ while True:
                                 "joinType":"WEB",
                                 "version":"2.7.202207.1213",
                                 "equipment":"PC"
-                            });print(str(homepage.content, encoding="UTF-8"))
+                            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                             #time.sleep(time_wait)
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -682,7 +682,7 @@ while True:
                                 "joinType":"WEB",
                                 "version":"2.7.202207.1213",
                                 "equipment":"PC"
-                            });print(str(homepage.content, encoding="UTF-8"))
+                            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                             time.sleep(time_wait)
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
