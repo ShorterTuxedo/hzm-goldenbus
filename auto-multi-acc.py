@@ -759,13 +759,13 @@ while True:
                         bestDate = DATE
                         bestBestTiming = bestTiming
 
-                    if lastNumPeople > len(PASSENGERS):
+                    if lastNumPeople >= len(PASSENGERS):
                         break
                     day += 1
                     # accNum += 1
                     # accNum = accNum % len(myHeaders)
                     DATE_CHECKER += datetime.timedelta(days=1)
-                if lastNumPeople == 0:
+                if lastNumPeople == 0 or lastNumPeople < len(PASSENGERS):
                     writeLog("[抱歉] 暂无可用日期。")
                     # break
                 else:
