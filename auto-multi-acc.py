@@ -411,7 +411,7 @@ mainHzmbus = hzmbus
 
 IndexMonitor = 0
 
-time_wait = (61 / (10 * len(info["monitors"])))
+time_wait = (61 / (12 * len(info["monitors"])))
 
 MyDones = [False for i in range(len(info["monitors"]))]
 
@@ -760,6 +760,9 @@ while True:
                         lastNumPeople = numPeople
                         bestDate = DATE
                         bestBestTiming = bestTiming
+
+                    if lastNumPeople > len(PASSENGERS):
+                        break
                     day += 1
                     # accNum += 1
                     # accNum = accNum % len(myHeaders)
