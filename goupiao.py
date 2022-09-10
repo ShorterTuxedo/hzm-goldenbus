@@ -431,7 +431,7 @@ while True:
                     break
                 else:
                     if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
-                        writeLog("[哎呀] 没能够搞定验证码。")
+                        writeLog("[哎呀] 没能够搞定验证码。");time.sleep(1)
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")

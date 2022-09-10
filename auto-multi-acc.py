@@ -916,7 +916,7 @@ while True:
                             writeLog("[滑块验证] 验证码类型预测错误。")
                             CWRONG = True
                             continue
-                        writeLog("[哎呀] 没能够搞定验证码。")
+                        writeLog("[哎呀] 没能够搞定验证码。");time.sleep(1)
                         continue
                     if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                         writeLog("[被限速] 要等一会儿。")
