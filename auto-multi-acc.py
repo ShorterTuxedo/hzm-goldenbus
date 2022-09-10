@@ -13,8 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header
 from urllib import parse
 import os 
-
-nowtime = int(time.time())
+nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
 logfile = f"log{nowtime}.txt"
 
 TIMESHUA = False
