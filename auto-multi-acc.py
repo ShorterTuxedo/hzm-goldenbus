@@ -819,7 +819,7 @@ while True:
 
                         result = recognizer.classification(code)
 
-                        if not result.isnumeric():
+                        if not (result.isnumeric() and len(result) == 4):
 
                             writeLog("[验证码失败] 哎哟！我没有识别正确。")
 
