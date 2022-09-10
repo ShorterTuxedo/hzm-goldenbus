@@ -14,10 +14,8 @@ from email.header import Header
 from urllib import parse
 import os 
 
-try:
-    os.remove("log.txt") # 节省空间
-except Exception:
-    pass
+nowtime = int(time.time())
+logfile = f"log{nowtime}.txt"
 
 TIMESHUA = False
 
@@ -48,7 +46,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     "joinType": "WEB",
                     "version": "2.7.202207.1213",
                     "equipment": "PC"
-                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -85,7 +83,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     "joinType":"WEB",
                     "version":"2.7.202207.1213",
                     "equipment":"PC"
-                    });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                    });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -134,7 +132,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
         }
         while True:
             try:
-                homepage = beitsin.get("https://mpgsproxy.hzmbus.com/checkout/hostedCheckout", headers=headers);writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                homepage = beitsin.get("https://mpgsproxy.hzmbus.com/checkout/hostedCheckout", headers=headers);print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -185,7 +183,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                     'interaction.cancelUrl': 'urn:hostedCheckout:defaultCancelUrl',
                     'interaction.timeoutUrl': 'urn:hostedCheckout:defaultTimeoutUrl',
                     'session.id': paymentData["sessionId"],
-                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -216,7 +214,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
                 homepage = beitsin.post(myRetURL, headers=headers, data={
                     "merchantId": paymentData["merchant"],
                     "returnUrl": "https://i.hzmbus.com/webhtml/order_details?orderNo="+paymentData["orderNo"]+"&tab1=1"
-                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                 # time.sleep(time_wait)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -304,7 +302,7 @@ def appendToDict(_dict, k, v):
 def writeLog(text):
   _text="["+time.strftime("%d/%m/%Y %H:%M:%S", time.localtime(time.time()))+"] "+text
   print(_text)
-  log = open("log.txt", "a", encoding="UTF-8")
+  log = open(logfile, "a", encoding="UTF-8")
   myLog = (_text+"\n")
   log.write(myLog)
   log.close()
@@ -381,7 +379,7 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+            });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -481,7 +479,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-                });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -636,7 +634,7 @@ while True:
                                 "joinType":"WEB",
                                 "version":"2.7.202207.1213",
                                 "equipment":"PC"
-                            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                            });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                             #time.sleep(time_wait)
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -688,7 +686,7 @@ while True:
                                 "joinType":"WEB",
                                 "version":"2.7.202207.1213",
                                 "equipment":"PC"
-                            });writeLog("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
+                            });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))
                             time.sleep(time_wait)
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -813,7 +811,7 @@ while True:
                         with open("captcha_buy.png", "wb") as code:
                             code.write(homepage.content)
 
-                        recognizer = ddddocr.DdddOcr(old=True)
+                        recognizer = ddddocr.DdddOcr()
 
                         code = open("captcha_buy.png", "rb").read()
 
