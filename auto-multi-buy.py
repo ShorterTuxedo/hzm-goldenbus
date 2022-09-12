@@ -10,7 +10,7 @@ import acw_sc_v2
 from urllib import parse
 import os 
 
-def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought):
+def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
     if not (bought):
         my_cap = mycap
         while True:
@@ -958,5 +958,5 @@ while True:
             bought = False
             for i in range(len(info["buyers"])):
                 mycap = my_cap
-                myT = threading.Thread(target=buy, args=(myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought))
+                myT = threading.Thread(target=buy, args=(myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming))
                 myT.start()
