@@ -571,6 +571,7 @@ myThreads = []
 for i in range(len(info["buyers"])):
     myT = threading.Thread(target = LoginToAcc, args = (info["buyers"][i], i, myBuyHeaders, MyDones))
     myT.start()
+    time.sleep(0.1)
 
 while MyDones != MyAllDones:
     pass
@@ -681,6 +682,7 @@ myThreads = []
 for i in range(len(info["monitors"])):
     myT = threading.Thread(target = LoginToAcc, args = (info["monitors"][i], i, myHeaders, MyDones))
     myT.start()
+    time.sleep(0.1)
 
 while MyDones != MyAllDones:
     pass
