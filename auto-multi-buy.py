@@ -5,168 +5,17 @@ import sys
 import datetime
 import ddddocr
 import json
-import crack_ali
+import crack_ali_am as crack_ali
 import acw_sc_v2
 from urllib import parse
 import os 
 
-def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
-    my_cap = mycap
-    while True:
-        if CAPTCHAS[i] == 1:
-            result = None
-
-            while result == None:
-                homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
-                try:
-                    if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-                        arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-                        print("arg1="+arg1)
-                        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-                        print("acw_sc__v2="+ACWSCV2)
-                        acw = requests.cookies.RequestsCookieJar()
-                        acw.set("acw_sc__v2", ACWSCV2)
-                        hzmbus.cookies.update(acw)
-                        result = None
-                        continue
-                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                        result = None
-                        if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                            time.sleep(60)
-                        continue
-                except Exception:
-                    pass
-
-                with open(f"captcha_buy{i}.png", "wb") as code:
-                    code.write(homepage.content)
-
-                recognizer = ddddocr.DdddOcr()
-
-                code = open(f"captcha_buy{i}.png", "rb").read()
-
-                result = recognizer.classification(code)
-
-                if not (result.isnumeric() and len(result) == 4):
-
-                    writeLog("[验证码失败] 哎哟！我没有识别正确。")
-
-                    result = None
-
-            writeLog("[验证码结果] 验证码结果为 " + result)
-        elif CWRONGS[i]:
-            while ali_being_used:
-                pass
-            ali_being_used = True
-            result = ""
-            TIMESHUAS[i] = True
-            oldtime_wait = time_wait
-            time_wait = 0.01
-            FINISHEDCAPTCHAS[i] = True
-            referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
-            referrerURL = parse.quote_plus(referrerURL)
-            my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
-            ali_being_used = False
-            if my_cap == None:
-                break
-        if CAPTCHAS[i] == 2:
-            result = ""
-        while True:
-            try:
-                if bought:
-                    sys.exit(0)
-                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
-                "ticketData": DATE,
-                "lineCode": ROUTE,
-                "startStationCode": START,
-                "endStationCode": END,
-                "boardingPointCode": START + "01",
-                "breakoutPointCode": END + "01",
-                "currency": "2",
-                "ticketCategory": "1",
-                "tickets": PASSENGERS,
-                "amount": TOTAL_PRICE * 100,
-                "feeType": 9,
-                "totalVoucherpay": 0,
-                "voucherNum": 0,
-                "voucherStr": "",
-                "totalBalpay": 0,
-                "totalNeedpay": TOTAL_PRICE * 100,
-                "bookBeginTime": bestTiming,
-                "bookEndTime": bestTiming,
-                "captcha": result,
-                "sessionId": "" if CAPTCHAS[i] == 1 else my_cap["sessionId"],
-                "sig": "" if CAPTCHAS[i] == 1 else my_cap["sig"],
-                "token": "" if CAPTCHAS[i] == 1 else my_cap["token"],
-                "timestamp": int(time.time()),
-                "appId": "HZMBWEB_HK",
-                "joinType": "WEB",
-                "version": "2.7.202207.1213",
-                "equipment": "PC"
-                }, timeout=5)
-                if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-                    arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-                    print("arg1="+arg1)
-                    ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-                    print("acw_sc__v2="+ACWSCV2)
-                    acw = requests.cookies.RequestsCookieJar()
-                    acw.set("acw_sc__v2", ACWSCV2)
-                    hzmbus.cookies.update(acw)
-                    continue
-                elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                    if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
-                        time.sleep(60)
-                    continue
-                homepage.json()
-                break
-            except Exception as e:
-                print(e)
-                pass
-
-        writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
-
-        if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
-            arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
-            print("arg1="+arg1)
-            ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
-            print("acw_sc__v2="+ACWSCV2)
-            acw = requests.cookies.RequestsCookieJar()
-            acw.set("acw_sc__v2", ACWSCV2)
-            hzmbus.cookies.update(acw)
-            continue
-
-        SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
-
-        if SUCCESS:
-            writeLog(f"[购票成功] 账号 {i} 购票成功。请抓紧时间支付车费。")
-            writeLog(f"[账号信息] 账号信息: " + info["buyers"][i]["uname"] + ", " + info["buyers"][i]["pwd"])
-            bought = True
-            ticket_success(hzmbus, headers, homepage.json()["responseData"]["orderNumber"], homepage.json()["responseData"]["orderReqno"]) # ticket_success()
-            break
-        else:
-            if homepage.json().get("message", "无信息") == "验证码不能为空" and CAPTCHAS[i] == 2:
-                writeLog("[图形验证] 验证码类型预测错误。")
-                CAPTCHAS[i] = 1
-                continue
-            if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
-                if "会话ID" in homepage.json().get("message", "无信息") and CAPTCHAS[i] == 1:
-                    CAPTCHAS[i] = 2
-                    writeLog("[滑块验证] 验证码类型预测错误。")
-                    CWRONGS[i] = True
-                    continue
-                writeLog("[哎呀] 没能够搞定验证码。");time.sleep(1)
-                continue
-            if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
-                writeLog("[被限速] 要等一会儿。")
-                # time.sleep(30*60) # 等 30 分
-                continue
-            writeLog("[购票失败] 抱歉！购票流程中出现问题。")
-            ticket_failure()
-            break
+info = json.loads(open("info.json", "r").read())
 
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
 logfile = f"log{nowtime}.txt"
 
-TIMESHUA = False
+TIMESHUAS = [False for i in range(len(info["buyers"]))]
 
 CWRONG = False
 
@@ -175,8 +24,6 @@ CWRONG = False
 # 需要于 8：00 前几分钟运行。
 
 CAPTCHA = 2 # 2 = 阿里云， 1 = 文字
-
-info = json.loads(open("info.json", "r").read())
 
 DATE = "1970-01-01" # 替代日期
 
@@ -441,7 +288,7 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
     except smtplib.SMTPException as e:
         print(e)
         print("Error: 无法发送邮件")
- 
+
 def ticket_failure():
     print("Couldn't buy ticket")
 
@@ -460,6 +307,158 @@ myHeaders = [[None, {}] for i in range(len(info["monitors"]))] # 多账号查询
 myBuyHeaders = [[None, {}] for i in range(len(info["monitors"]))] # 多账号查询余票
 rateLimited = [None for i in range(len(info["monitors"]))] # 多账号查询余票
 allRate = [True for i in range(len(info["monitors"]))]
+
+def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, my_caps, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
+    while True:
+        if CAPTCHAS[i] == 1:
+            result = None
+
+            while result == None:
+                homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
+                try:
+                    if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                        arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                        print("arg1="+arg1)
+                        ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                        print("acw_sc__v2="+ACWSCV2)
+                        acw = requests.cookies.RequestsCookieJar()
+                        acw.set("acw_sc__v2", ACWSCV2)
+                        hzmbus.cookies.update(acw)
+                        result = None
+                        continue
+                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                        result = None
+                        if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                            time.sleep(60)
+                        continue
+                except Exception:
+                    pass
+
+                with open(f"captcha_buy{i}.png", "wb") as code:
+                    code.write(homepage.content)
+
+                recognizer = ddddocr.DdddOcr()
+
+                code = open(f"captcha_buy{i}.png", "rb").read()
+
+                result = recognizer.classification(code)
+
+                if not (result.isnumeric() and len(result) == 4):
+
+                    writeLog("[验证码失败] 哎哟！我没有识别正确。")
+
+                    result = None
+
+            writeLog("[验证码结果] 验证码结果为 " + result)
+        elif CWRONGS[i]:
+            while ali_being_used:
+                pass
+            ali_being_used = True
+            result = ""
+            TIMESHUA = True
+            oldtime_wait = time_wait
+            time_wait = 0.01
+            FINISHEDCAPTCHAS[i] = True
+            referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
+            referrerURL = parse.quote_plus(referrerURL)
+            my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+            ali_being_used = False
+            if my_caps[i] == None:
+                break
+        if CAPTCHAS[i] == 2:
+            result = ""
+        while True:
+            try:
+                if bought:
+                    sys.exit(0)
+                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
+                "ticketData": DATE,
+                "lineCode": ROUTE,
+                "startStationCode": START,
+                "endStationCode": END,
+                "boardingPointCode": START + "01",
+                "breakoutPointCode": END + "01",
+                "currency": "2",
+                "ticketCategory": "1",
+                "tickets": PASSENGERS,
+                "amount": TOTAL_PRICE * 100,
+                "feeType": 9,
+                "totalVoucherpay": 0,
+                "voucherNum": 0,
+                "voucherStr": "",
+                "totalBalpay": 0,
+                "totalNeedpay": TOTAL_PRICE * 100,
+                "bookBeginTime": bestTiming,
+                "bookEndTime": bestTiming,
+                "captcha": result,
+                "sessionId": "" if CAPTCHAS[i] == 1 else my_caps[i]["sessionId"],
+                "sig": "" if CAPTCHAS[i] == 1 else my_caps[i]["sig"],
+                "token": "" if CAPTCHAS[i] == 1 else my_caps[i]["token"],
+                "timestamp": int(time.time()),
+                "appId": "HZMBWEB_HK",
+                "joinType": "WEB",
+                "version": "2.7.202207.1213",
+                "equipment": "PC"
+                }, timeout=5)
+                if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                    arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                    print("arg1="+arg1)
+                    ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                    print("acw_sc__v2="+ACWSCV2)
+                    acw = requests.cookies.RequestsCookieJar()
+                    acw.set("acw_sc__v2", ACWSCV2)
+                    hzmbus.cookies.update(acw)
+                    continue
+                elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                    if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                        time.sleep(60)
+                    continue
+                homepage.json()
+                break
+            except Exception as e:
+                print(e)
+                pass
+
+            writeLog("[购票结果] 购票结果为 " + str(homepage.content, encoding="UTF-8"))
+
+            if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
+                print("arg1="+arg1)
+                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                print("acw_sc__v2="+ACWSCV2)
+                acw = requests.cookies.RequestsCookieJar()
+                acw.set("acw_sc__v2", ACWSCV2)
+                hzmbus.cookies.update(acw)
+                continue
+
+            SUCCESS = homepage.json().get("code", "FAILURE") == "SUCCESS"
+
+            if SUCCESS:
+                writeLog(f"[购票成功] 账号 {i} 购票成功。请抓紧时间支付车费。")
+                writeLog(f"[账号信息] 账号信息: " + info["buyers"][i]["uname"] + ", " + info["buyers"][i]["pwd"])
+                bought = True
+                ticket_success(hzmbus, headers, homepage.json()["responseData"]["orderNumber"], homepage.json()["responseData"]["orderReqno"]) # ticket_success()
+                break
+            else:
+                if homepage.json().get("message", "无信息") == "验证码不能为空" and CAPTCHAS[i] == 2:
+                    writeLog("[图形验证] 验证码类型预测错误。")
+                    CAPTCHAS[i] = 1
+                    continue
+                if homepage.json().get("message", "无信息") == "验证码不正确" or "会话ID" in homepage.json().get("message", "无信息"):
+                    if "会话ID" in homepage.json().get("message", "无信息") and CAPTCHAS[i] == 1:
+                        CAPTCHAS[i] = 2
+                        writeLog("[滑块验证] 验证码类型预测错误。")
+                        CWRONGS[i] = True
+                        continue
+                    writeLog("[哎呀] 没能够搞定验证码。");time.sleep(1)
+                    continue
+                if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
+                    writeLog("[被限速] 要等一会儿。")
+                    # time.sleep(30*60) # 等 30 分
+                    continue
+                writeLog("[购票失败] 抱歉！购票流程中出现问题。")
+                ticket_failure()
+                break
 
 def checkAll():
     global rateLimited
@@ -730,7 +729,8 @@ eightPM = 20
 #print(dt)
 DF = "%Y-%m-%d"
 oldtime_wait = 0
-FINISHEDCAPTCHA = False
+FINISHEDCAPTCHAS = [False for i in range(len(info["buyers"]))]
+ALLFINISHEDCS = [True for i in range(len(info["buyers"]))]
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)
@@ -740,26 +740,34 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
     weekday = now.weekday()
-    my_cap = {"sessionId": "", "sig": "", "token": ""}
+    my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
     # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
-    if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and not FINISHEDCAPTCHA):
+    if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and (not (FINISHEDCAPTCHAS == ALLFINISHEDCS))):
         CAPTCHA = 2
         writeLog("[滑块时间] 滑块时间到。")
         if CAPTCHA == 2:
             TIMESHUA = True
             oldtime_wait = time_wait
             time_wait = 0
-            FINISHEDCAPTCHA = True
-            referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
-            referrerURL = parse.quote_plus(referrerURL)
-            my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
-            if my_cap == None:
-                break
+            def getTime(i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, hzmbus, headers):
+                while True:
+                    referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
+                    referrerURL = parse.quote_plus(referrerURL)
+                    my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                    if my_caps[i] == None:
+                        continue
+                    break
+                FINISHEDCAPTCHAS[i] = True
+            for i in range(len(info["buyers"])):
+                myT = threading.Thread(target=getTime, args=[i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myBuyHeaders[i][0], myBuyHeaders[i][1]])
+                myT.start()
+            while FINISHEDCAPTCHAS != ALLFINISHEDCS:
+                pass 
     else:
         CAPTCHA = 1
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
-            my_cap = {"sessionId": "", "sig": "", "token": ""}
+            my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
         while True:
             gotTicket = False
             while not gotTicket:
@@ -955,14 +963,11 @@ while True:
             bestTiming = bestBestTiming
             CAPTCHAS = [CAPTCHA for i in range(len(info["buyers"]))]
             CWRONGS = [CWRONG for i in range(len(info["buyers"]))]
-            FINISHEDCAPTCHAS = [FINISHEDCAPTCHA for i in range(len(info["buyers"]))]
-            TIMESHUAS = [TIMESHUA for i in range(len(info["buyers"]))]
             ali_being_used = False
             bought = False
             for i in range(len(info["buyers"])):
-                mycap = my_cap
-                myT = threading.Thread(target=buy, args=[myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought])
+                myT = threading.Thread(target=buy, args=[myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA, my_caps, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming])
                 myT.start()
-            while not (bought):
+            while not(bought):
                 pass
             break
