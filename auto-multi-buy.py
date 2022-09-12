@@ -139,8 +139,8 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS
         if SUCCESS:
             writeLog(f"[购票成功] 账号 {i} 购票成功。请抓紧时间支付车费。")
             writeLog(f"[账号信息] 账号信息: " + info["buyers"][i]["uname"] + ", " + info["buyers"][i]["pwd"])
-            ticket_success(hzmbus, headers, homepage.json()["responseData"]["orderNumber"], homepage.json()["responseData"]["orderReqno"]) # ticket_success()
             bought = True
+            ticket_success(hzmbus, headers, homepage.json()["responseData"]["orderNumber"], homepage.json()["responseData"]["orderReqno"]) # ticket_success()
             break
         else:
             if homepage.json().get("message", "无信息") == "验证码不能为空" and CAPTCHAS[i] == 2:
