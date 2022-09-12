@@ -960,3 +960,6 @@ while True:
                 mycap = my_cap
                 myT = threading.Thread(target=buy, args=(myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, mycap, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming))
                 myT.start()
+            while not(bought):
+                pass
+            break
