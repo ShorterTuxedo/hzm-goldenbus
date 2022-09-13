@@ -110,6 +110,13 @@ def slide(session, headers, referrerURL, APPID, scene, ncSessionID, TRACK):
     s3 = time.time()
     print(f"Stage 2 done.\nStage 1 took {s2-s1} seconds.")
     print(f"Stage 2 took {s3-s2} seconds.")
+    myData = json.loads(myData)
+    if type(myData).__name__ != "dict":
+        print("破解失败。")
+        return None
+    else:
+        print(myData)
+        print("破解成功。")
     return myData
 """    try:
         mySlider = requests.post("http://localhost:8001/captcha", json={
