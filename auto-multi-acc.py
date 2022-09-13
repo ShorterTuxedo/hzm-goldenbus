@@ -582,7 +582,7 @@ while True:
             my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
             if my_cap == None:
                 break
-    else:
+    elif not (weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71460 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)):
         CAPTCHA = 1
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
