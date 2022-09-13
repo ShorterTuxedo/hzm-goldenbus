@@ -767,7 +767,7 @@ while True:
                     myT.run()
             while FINISHEDCAPTCHAS != ALLFINISHEDCS:
                 pass 
-    else:
+    elif not (weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71460 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)):
         CAPTCHA = 1
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
