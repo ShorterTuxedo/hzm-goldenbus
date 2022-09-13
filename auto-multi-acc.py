@@ -378,7 +378,7 @@ while True:
             "joinType":"WEB",
             "version":"2.7.202207.1213",
             "equipment":"PC"
-            });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+            }, timeout=1);print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -478,7 +478,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+                }, timeout=1);print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))

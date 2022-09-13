@@ -1,3 +1,4 @@
+import random
 import requests
 import threading
 import time
@@ -10,9 +11,12 @@ import acw_sc_v2
 from urllib import parse
 import os 
 
+
+LOGIN_COOLDOWN = 0.0
+
 info = json.loads(open("info.json", "r").read())
 
-nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
+nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 logfile = f"log{nowtime}.txt"
 
 TIMESHUAS = [False for i in range(len(info["buyers"]))]
@@ -476,11 +480,11 @@ IndexMonitor = 0
 
 time_wait = 0 # (55 / (12 * len(info["monitors"])))
 
-MyDones = [False for i in range(len(info["buyers"]))]
+MyBDones = [False for i in range(len(info["buyers"]))]
 
-MyAllDones = [True for i in range(len(info["buyers"]))]
+MyBAllDones = [True for i in range(len(info["buyers"]))]
 
-def LoginToAcc(ACC, IndexMonitor, myBuyHeaders, MyDones):
+def LoginToBuyAcc(ACC, IndexMonitor, myBuyHeaders, MyBDones):
     headers = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "accept-language": "zh-CN,zh;q=0.9",
@@ -538,7 +542,7 @@ def LoginToAcc(ACC, IndexMonitor, myBuyHeaders, MyDones):
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+                }, timeout=1);print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -568,12 +572,9 @@ def LoginToAcc(ACC, IndexMonitor, myBuyHeaders, MyDones):
 
 myThreads = []
 for i in range(len(info["buyers"])):
-    myT = threading.Thread(target = LoginToAcc, args = (info["buyers"][i], i, myBuyHeaders, MyDones))
+    myT = threading.Thread(target = LoginToBuyAcc, args = (info["buyers"][i], i, myBuyHeaders, MyBDones))
     myT.start()
-    time.sleep(0.1)
-
-while MyDones != MyAllDones:
-    pass
+    time.sleep(LOGIN_COOLDOWN)
 
 BUS_STOPS = {
     "ZHO": "珠海",
@@ -649,7 +650,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
                 "joinType":"WEB",
                 "version":"2.7.202207.1213",
                 "equipment":"PC"
-                });print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
+                }, timeout=1);print("[请求结果] 该次请求结果为 " + str(homepage.content, encoding="UTF-8"))#;time.sleep(3)
 
             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
@@ -681,9 +682,9 @@ myThreads = []
 for i in range(len(info["monitors"])):
     myT = threading.Thread(target = LoginToAcc, args = (info["monitors"][i], i, myHeaders, MyDones))
     myT.start()
-    time.sleep(0.1)
+    time.sleep(LOGIN_COOLDOWN)
 
-while MyDones != MyAllDones:
+while (MyDones != MyAllDones) and (MyBAllDones != MyBDones):
     pass
 
 ROUTE = info["route"]
@@ -742,7 +743,7 @@ while True:
     weekday = now.weekday()
     my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
     # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
-    if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and (not (FINISHEDCAPTCHAS == ALLFINISHEDCS))):
+    if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71460 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and (not (FINISHEDCAPTCHAS == ALLFINISHEDCS))):
         CAPTCHA = 2
         writeLog("[滑块时间] 滑块时间到。")
         if CAPTCHA == 2:
@@ -760,7 +761,10 @@ while True:
                 FINISHEDCAPTCHAS[i] = True
             for i in range(len(info["buyers"])):
                 myT = threading.Thread(target=getTime, args=[i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myBuyHeaders[i][0], myBuyHeaders[i][1]])
-                myT.start()
+                if random.random() <= 0.3:
+                    myT.start()
+                else:
+                    myT.run()
             while FINISHEDCAPTCHAS != ALLFINISHEDCS:
                 pass 
     else:
