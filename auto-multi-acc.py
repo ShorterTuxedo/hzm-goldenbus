@@ -618,7 +618,7 @@ while True:
                         else:
                             rateLimited[accNum] = None
                     hzmbus = myHeaders[accNum][0]
-                    header = myHeaders[accNum][1]
+                    headers = myHeaders[accNum][1]
                     writeLog(f"[查询] 正在使用账号 {accNum} 查询余票。")
                     if day > DAYS_UNTIL_NEXT_TUESDAY:
                         break
