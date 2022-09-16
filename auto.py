@@ -203,6 +203,7 @@ eightPM = 20
 DF = "%Y-%m-%d"
 FINISHEDCAPTCHA = False
 writeLog("[提示] 等待中...")
+my_cap = {"sessionId": "", "sig": "", "token": ""}
 while True:
     #timeArray=time.localtime(time.time()+dt)
     #jsTime=time.strftime("%Y-%m-%d %H:%M:%S")
@@ -211,7 +212,6 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
     weekday = now.weekday()
-    my_cap = {"sessionId": "", "sig": "", "token": ""}
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
