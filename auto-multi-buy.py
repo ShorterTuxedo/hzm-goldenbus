@@ -732,6 +732,7 @@ DF = "%Y-%m-%d"
 oldtime_wait = 0
 FINISHEDCAPTCHAS = [False for i in range(len(info["buyers"]))]
 ALLFINISHEDCS = [True for i in range(len(info["buyers"]))]
+my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)
@@ -741,7 +742,6 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
     weekday = now.weekday()
-    my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
     # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
     if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71460 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and (not (FINISHEDCAPTCHAS == ALLFINISHEDCS))):
         CAPTCHA = 2
