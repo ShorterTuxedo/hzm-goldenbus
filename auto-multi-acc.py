@@ -10,7 +10,7 @@ import crack_ali
 import acw_sc_v2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.header import Header
+from email.header fimport Header
 from urllib import parse
 import os 
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
@@ -558,6 +558,7 @@ eightPM = 20
 DF = "%Y-%m-%d"
 oldtime_wait = 0.01
 FINISHEDCAPTCHA = False
+my_cap = {"sessionId": "", "sig": "", "token": ""}
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)
@@ -567,7 +568,6 @@ while True:
     now = datetime.datetime.now()
     hour = now.hour
     weekday = now.weekday()
-    my_cap = {"sessionId": "", "sig": "", "token": ""}
     # writeLog("[时间] 目前时间为" + str(now.hour * 3600 + now.minute * 60 + now.second))
     if ((weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71700 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)) and not FINISHEDCAPTCHA):
         CAPTCHA = 2
