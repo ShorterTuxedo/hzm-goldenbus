@@ -39,8 +39,6 @@ def ticket_success(hzmbus, oheaders, orderNo, oReqNo):
     myEmailContent = myEmailContent.replace("[INSERT DATES HERE]", myDates)
     myEmailTContent = open("HZMB_Success_Email.txt", "r", encoding="UTF-8").read()
     myEmailTContent = myEmailTContent.replace("[INSERT DATES HERE]", myDates)
-    if info.get("autopay", False):
-        myEmailContent = myEmailContent.replace("交付车费。", f"交付车费。[{myLBox}]")
     # 在这里输入 STMP 密码
     sender = info["mysendemail"] # 您的电邮
     receivers = info["emailreceivers"]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
