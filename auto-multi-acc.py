@@ -10,7 +10,7 @@ import crack_ali
 import acw_sc_v2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.header fimport Header
+from email.header import Header
 from urllib import parse
 import os 
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H:%M:%S")
