@@ -122,7 +122,7 @@ while True:
 
         STATE = "STATE"
 
-        UIN = "OTIxMTgyMjA2"
+        UIN = input("请输入 uin 参数：")
 
         VERSION = "6307062c"
 
@@ -256,7 +256,7 @@ while True:
 
             STATE = "STATE"
 
-            UIN = "OTIxMTgyMjA2"
+            UIN = input("请输入 uin 参数：")
 
             VERSION = "6307062c"
 
