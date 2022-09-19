@@ -105,9 +105,9 @@ while True:
         "Sec-Fetch-User":"?1",
         "Upgrade-Insecure-Requests":"1",
         "User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 QBCore/4.0.1301.400 QQBrowser/9.0.2524.400 Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 NetType/WIFI MicroMessenger/7.0.20.1781(0x6700143B) WindowsWechat",
-        "sec-ch-ua":"\"\"",
-        "sec-ch-ua-mobile":"?0",
-        "sec-ch-ua-platform":"\"\""
+        "sec-ch-ua": "\"\"", #"\"\"",
+        "sec-ch-ua-mobile": "?1", #"?0",
+        "sec-ch-ua-platform": "\"\"", #"\"\""
         }
 
         homepage = hzmbus.get("https://wx.hzmbus.com/wxhtml/", headers=headers)
@@ -239,9 +239,9 @@ while True:
             "Sec-Fetch-User":"?1",
             "Upgrade-Insecure-Requests":"1",
             "User-Agent":"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36 QBCore/4.0.1301.400 QQBrowser/9.0.2524.400 Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 NetType/WIFI MicroMessenger/7.0.20.1781(0x6700143B) WindowsWechat",
-            "sec-ch-ua":"\"\"",
-            "sec-ch-ua-mobile":"?0",
-            "sec-ch-ua-platform":"\"\""
+            "sec-ch-ua": "\"\"", #"\"\"",
+            "sec-ch-ua-mobile": "?1", #"?0",
+            "sec-ch-ua-platform": "\"\"", #"\"\""
             }
 
             homepage = hzmbus.get("https://wx.hzmbus.com/wxhtml/", headers=headers)
