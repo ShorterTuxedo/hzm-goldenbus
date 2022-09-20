@@ -572,7 +572,7 @@ def LoginToBuyAcc(ACC, IndexMonitor, myBuyHeaders, MyBDones):
     writeLog(f"[已登录] 购票账号 {IndexMonitor} 完成登陆流程。")
 
     myBuyHeaders[IndexMonitor] = [hzmbus, headers]
-    MyDones[IndexMonitor] = True
+    MyBDones[IndexMonitor] = True
 
 myThreads = []
 for i in range(len(info["buyers"])):
