@@ -701,11 +701,7 @@ while True:
                         "sessionId": "" if CAPTCHA == 1 else my_cap["sessionId"],
                         "sig": "" if CAPTCHA == 1 else my_cap["sig"],
                         "token": "" if CAPTCHA == 1 else my_cap["token"],
-                        "timestamp": int(time.time()),
-                        "appId": "HZMBWEB_HK",
-                        "joinType": "WEB",
-                        "version": "2.7.202207.1213",
-                        "equipment": "PC"
+                        "timestamp": int(time.time())
                         }, timeout=5)
                         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
