@@ -694,7 +694,7 @@ while True:
                     result = None
 
                     while result == None:
-                        homepage = hzmbus.get("https://i.hzmbus.com/webh5api/captcha", headers=headers)
+                        homepage = hzmbus.get("https://wx.hzmbus.com/hzmb/webapi/captcha", headers=headers)
                         try:
                             if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                                 arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
