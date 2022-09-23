@@ -538,6 +538,8 @@ while True:
                                     rateLimited[accNum] = time.time()
                                     accNum += 1
                                     accNum = accNum % len(myHeaders)
+                                if ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")):
+                                    continue
                                 break
                             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
                                 writeLog("[被限速] 要等一会儿。")
