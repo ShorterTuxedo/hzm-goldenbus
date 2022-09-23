@@ -23,7 +23,7 @@ info = json.loads(open("info.json", "r").read())
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 logfile = f"log{nowtime}.txt"
 
-TIMESHUAS = [False for i in range(len(info["buyers"]))]
+TIMESHUA = False
 
 CWRONG = False
 
