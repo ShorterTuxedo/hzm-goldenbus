@@ -568,8 +568,8 @@ while True:
 
                     PRICES = homepage.json()"""
 
-                    ADULT_PRICE = 65 # PRICES["responseData"][0]["adultHKD"]
-                    KID_PRICE = 33 # PRICES["responseData"][0]["childrenHKD"]
+                    ADULT_PRICE = 58 # PRICES["responseData"][0]["adultCNY"]
+                    KID_PRICE = 29 # PRICES["responseData"][0]["childrenCNY"]
 
                     TOTAL_PRICE = (ADULTS * ADULT_PRICE) + (KIDS * KID_PRICE)
 
@@ -752,7 +752,7 @@ while True:
                         "endStationCode": END,
                         "boardingPointCode": START + "01",
                         "breakoutPointCode": END + "01",
-                        "currency": "2",
+                        "currency": "1",
                         "ticketCategory": "1",
                         "tickets": PASSENGERS,
                         "amount": TOTAL_PRICE * 100,
