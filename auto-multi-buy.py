@@ -6,7 +6,7 @@ import sys
 import datetime
 import ddddocr
 import json
-import hzmbus_hash;import crack_ali_am as crack_ali
+import hzmbus_hash;import hzmbus_hash;import crack_ali_am as crack_ali
 import acw_sc_v2
 from urllib import parse
 from email.mime.text import MIMEText

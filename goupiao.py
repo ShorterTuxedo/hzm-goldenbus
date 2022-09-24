@@ -6,7 +6,7 @@ import ddddocr
 import json
 import smtplib
 import acw_sc_v2
-import crack_ali
+import hzmbus_hash;import crack_ali
 from urllib import parse
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart

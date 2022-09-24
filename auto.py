@@ -5,7 +5,7 @@ import datetime
 import ddddocr
 import json
 import smtplib
-import crack_ali
+import hzmbus_hash;import crack_ali
 import acw_sc_v2
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
