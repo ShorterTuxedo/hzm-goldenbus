@@ -6,7 +6,7 @@ import sys
 import datetime
 import ddddocr
 import json
-import crack_ali_am as crack_ali
+import hzmbus_hash;import crack_ali_am as crack_ali
 import acw_sc_v2
 from urllib import parse
 from email.mime.text import MIMEText
@@ -316,7 +316,7 @@ myBuyHeaders = [[None, {}] for i in range(len(info["monitors"]))] # 多账号查
 rateLimited = [None for i in range(len(info["monitors"]))] # 多账号查询余票
 allRate = [True for i in range(len(info["monitors"]))]
 
-def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, my_caps, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
+def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, my_caps, myhashs, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
     while True:
         if CAPTCHAS[i] == 1:
             result = None
@@ -369,7 +369,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS
             FINISHEDCAPTCHAS[i] = True
             referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
             referrerURL = parse.quote_plus(referrerURL)
-            my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+            myhashs[i].activate_browser(url=myURL);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
             ali_being_used = False
             if my_caps[i] == None:
                 break
@@ -379,7 +379,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS
             try:
                 if bought:
                     sys.exit(0)
-                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
+                homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json=myhashs[i].set_token_web({
                 "ticketData": DATE,
                 "lineCode": ROUTE,
                 "startStationCode": START,
@@ -407,7 +407,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS
                 "joinType": "WEB",
                 "version": "2.7.202207.1213",
                 "equipment": "PC"
-                }, timeout=5)
+                }), timeout=5)
                 if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                     arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                     print("arg1="+arg1)
@@ -576,7 +576,7 @@ def LoginToBuyAcc(ACC, IndexMonitor, myBuyHeaders, MyBDones):
 
 myThreads = []
 for i in range(len(info["buyers"])):
-    myT = threading.Thread(target = LoginToBuyAcc, args = (info["buyers"][i], i, myBuyHeaders, MyBDones))
+    myT = threading.Thread(target = LoginToBuyAcc, args = [info["buyers"][i], i, myBuyHeaders, MyBDones])
     myT.start()
     time.sleep(LOGIN_COOLDOWN)
 
@@ -590,7 +590,7 @@ BUS_STOPS = {
 
 IndexMonitor = 0
 
-time_wait = 0 # (55 / (12 * len(info["monitors"])))
+time_wait = (55 / (12 * len(info["monitors"])))
 
 MyDones = [False for i in range(len(info["monitors"]))]
 
@@ -684,7 +684,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
 
 myThreads = []
 for i in range(len(info["monitors"])):
-    myT = threading.Thread(target = LoginToAcc, args = (info["monitors"][i], i, myHeaders, MyDones))
+    myT = threading.Thread(target = LoginToAcc, args = [info["monitors"][i], i, myHeaders, MyDones])
     myT.start()
     time.sleep(LOGIN_COOLDOWN)
 
@@ -736,7 +736,7 @@ DF = "%Y-%m-%d"
 oldtime_wait = 0
 FINISHEDCAPTCHAS = [False for i in range(len(info["buyers"]))]
 ALLFINISHEDCS = [True for i in range(len(info["buyers"]))]
-my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
+my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))];myhashs = [hzmbus_hash.HZMHash() for i in range(len(info["buyers"]))]
 writeLog("[提示] 等待中...")
 while True:
     #timeArray=time.localtime(time.time()+dt)
@@ -754,17 +754,17 @@ while True:
             TIMESHUA = True
             oldtime_wait = time_wait
             time_wait = 0
-            def getTime(i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, hzmbus, headers):
+            def getTime(i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myhashs, hzmbus, headers):
                 while True:
                     referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
                     referrerURL = parse.quote_plus(referrerURL)
-                    my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                    myhashs[i].activate_browser(url=myURL);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
                     if my_caps[i] == None:
                         continue
                     break
                 FINISHEDCAPTCHAS[i] = True
             for i in range(len(info["buyers"])):
-                myT = threading.Thread(target=getTime, args=[i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myBuyHeaders[i][0], myBuyHeaders[i][1]])
+                myT = threading.Thread(target=getTime, args=[i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myhashs, myBuyHeaders[i][0], myBuyHeaders[i][1]])
                 if random.random() <= 0.3:
                     myT.start()
                 else:
@@ -775,7 +775,7 @@ while True:
         CAPTCHA = 1
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
-            my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))]
+            my_caps = [{"sessionId": "", "sig": "", "token": ""} for i in range(len(info["buyers"]))];myhashs = [hzmbus_hash.HZMHash() for i in range(len(info["buyers"]))]
         while True:
             gotTicket = False
             while not gotTicket:
@@ -917,8 +917,8 @@ while True:
 
 
                     for TIME in TIMES:
+                        writeLog("[可预约数] 班次：" + TIME.get("beginTime", "00:00:00") + "，座位：" + str(TIME.get("maxPeople", 0)))
                         if bestTiming == None and numPeople == None:
-                            print(TIME)
                             bestTiming = TIME.get("beginTime", "00:00:00")
                             numPeople = TIME.get("maxPeople", 0)
                             if numPeople >= len(PASSENGERS):
@@ -982,7 +982,7 @@ while True:
             ali_being_used = False
             bought = False
             for i in range(len(info["buyers"])):
-                myT = threading.Thread(target=buy, args=[myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA, my_caps, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming])
+                myT = threading.Thread(target=buy, args=[myBuyHeaders[i][0], myBuyHeaders[i][1], i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA, my_caps, myhashs, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming])
                 myT.start()
             while not(bought):
                 pass
