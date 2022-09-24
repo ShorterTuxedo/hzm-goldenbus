@@ -18,7 +18,7 @@ from email.header import Header
 
 CAPTCHA = 2 # 2 = 阿里云， 1 = 文字
 
-info = json.loads(open("info.json", "r").read())
+info = json.loads(open("info.json", "r").read());myURL = "https://i.hzmbus.com/webhtml/index.html"
 
 def ticket_success():
     global info
@@ -201,7 +201,7 @@ eightPM = 20
 #print(dt)
 FINISHEDCAPTCHA = False
 writeLog("[提示] 等待中...")
-my_cap = {"sessionId": "", "sig": "", "token": ""}
+my_cap = {"sessionId": "", "sig": "", "token": ""};myhash = hzmbus_hash.HZMHash()
 while True:
     #timeArray=time.localtime(time.time()+dt)
     #jsTime=time.strftime("%Y-%m-%d %H:%M:%S")
@@ -213,7 +213,7 @@ while True:
     writeLog("[时间] 目前时间为" + now.strftime(TIMEFORMAT))
     if (weekday != 1) or (hour >= eightPM):
         if CAPTCHA == 1:
-            my_cap = {"sessionId": "", "sig": "", "token": ""}
+            my_cap = {"sessionId": "", "sig": "", "token": ""};myhash = hzmbus_hash.HZMHash()
         while True:
             writeLog(f"[购票中] 正在购买 {BUS_STOPS[START]} => {BUS_STOPS[END]} 车次的车票。")
             while True:
@@ -362,12 +362,12 @@ while True:
                         FINISHEDCAPTCHA = True
                         referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
                         referrerURL = parse.quote_plus(referrerURL)
-                        my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                        myhash.activate_browser(url=myURL);my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
                         if my_cap == None:
                             break
                 while True:
                     try:
-                        homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json={
+                        homepage = hzmbus.post("https://i.hzmbus.com/webh5api/ticket/buy.ticket", headers=headers, json=myhash.set_token_web({
                         "ticketData": DATE,
                         "lineCode": ROUTE,
                         "startStationCode": START,
@@ -395,7 +395,7 @@ while True:
                         "joinType": "WEB",
                         "version": "2.7.202207.1213",
                         "equipment": "PC"
-                        }, timeout=5)
+                        }), timeout=5)
                         if str(homepage.content, encoding="UTF-8").startswith("<html><script>"):
                             arg1 = acw_sc_v2.getArg1FromHTML(str(homepage.content, encoding="UTF-8"))
                             print("arg1="+arg1)
