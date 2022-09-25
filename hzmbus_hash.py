@@ -1,13 +1,15 @@
 from selenium import webdriver
+import acw_sc_v2
 import os
 import json
+import requests
 class HZMHash():
     def __init__(self, activate=False, url="https://i.hzmbus.com/webhtml/index.html"):
         self.activated = activate
         self.browser = None
         if activate:
             self.activate_browser(url)
-    def activate_browser(self, url="https://i.hzmbus.com/webhtml/index.html"):
+    def activate_browser(self, url="https://i.hzmbus.com/webhtml/index.html", myJsURL=None, jsScript=None):
         stealthminjs = None
         with open('stealth.min.js', 'r') as f:
             stealthminjs = f.read()
@@ -32,6 +34,46 @@ class HZMHash():
         except Exception as e:
             print("失败")
         self.browser.get(url)
+        print("The site is loaded.")
+        myJS = None
+        jsURL = None
+        if jsScript != None:
+            myJS = jsScript
+        else:
+            if myJsURL != None:
+                jsURL = myJsURL
+            else:
+                jsURL = self.browser.execute_script("return Array.prototype.slice.call(document.getElementsByTagName(\"script\")).reverse()[0].src;")
+            headers = {
+                "accept": "application/json, text/plain, */*",
+                "accept-language": "zh-CN,zh;q=0.9",
+                "authorization": "",
+                "content-type": "application/json;charset=UTF-8",
+                "sec-fetch-dest": "empty",
+                "sec-fetch-mode": "cors",
+                "sec-fetch-site": "same-origin",
+                "Referer": "https://i.hzmbus.com/webhtml/register",
+                "Referrer-Policy": "strict-origin-when-cross-origin",
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"
+            }
+            jsScrape = requests.Session()
+            acw = jsScrape.get("https://i.hzmbus.com/webhtml", headers=headers)
+            if str(acw.content, encoding="UTF-8").startswith("<html><script>"):
+                arg1 = acw_sc_v2.getArg1FromHTML(str(acw.content, encoding="UTF-8"))
+                print("arg1="+arg1)
+                ACWSCV2 = acw_sc_v2.getAcwScV2(arg1)
+                print("acw_sc__v2="+ACWSCV2)
+                acw = requests.cookies.RequestsCookieJar()
+                acw.set("acw_sc__v2", ACWSCV2)
+                jsScrape.cookies.update(acw)
+            headers["accept"] = "text/javascript, text/plain, */*"
+            myJS = str(jsScrape.get(jsURL, headers=headers).content, encoding="UTF-8")
+            myJS = myJS.split("var e=t.data.sessionId")[1]
+            myJS = myJS.split("}else t.data={")[0]
+            myJS+="return t.data;}"
+            myJS="function setTokenWeb(j){let t={\"data\":JSON.parse(t)};var e=t.data.sessionId"+myJS
+            print(myJS)
+        self.browser.execute_script(myJS)
         self.activated = True
     def msk6(self, data):
         if self.activated and self.browser != None:
