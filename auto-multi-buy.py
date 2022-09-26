@@ -764,7 +764,7 @@ while True:
                     break
                 FINISHEDCAPTCHAS[i] = True
             for i in range(len(info["buyers"])):
-                myT = threading.Thread(target=getTime, args=[i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myhashs, myBuyHeaders[i][0], myBuyHeaders[i][1]])
+                myT = threading.Thread(target=getTime, args=[i, TIMESHUA, FINISHEDCAPTCHAS, my_caps, myhashs, myBuyHeaders[i][0], myBuyHeaders[i][1]])
                 if random.random() <= 0.3:
                     myT.start()
                 else:
