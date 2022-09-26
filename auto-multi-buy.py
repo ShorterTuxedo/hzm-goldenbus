@@ -316,7 +316,7 @@ myBuyHeaders = [[None, {}] for i in range(len(info["monitors"]))] # 多账号查
 rateLimited = [None for i in range(len(info["monitors"]))] # 多账号查询余票
 allRate = [True for i in range(len(info["monitors"]))]
 
-def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUAS, my_caps, myhashs, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
+def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA, my_caps, myhashs, ali_being_used, bought, DATE, ROUTE, START, END, PASSENGERS, TOTAL_PRICE, bestTiming):
     while True:
         if CAPTCHAS[i] == 1:
             result = None
@@ -754,7 +754,7 @@ while True:
             TIMESHUA = True
             oldtime_wait = time_wait
             time_wait = 0
-            def getTime(i, TIMESHUAS, FINISHEDCAPTCHAS, my_caps, myhashs, hzmbus, headers):
+            def getTime(i, TIMESHUA, FINISHEDCAPTCHAS, my_caps, myhashs, hzmbus, headers):
                 while True:
                     referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
                     referrerURL = parse.quote_plus(referrerURL)
