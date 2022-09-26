@@ -71,7 +71,7 @@ class HZMHash():
             myJS = myJS.split("var e=t.data.sessionId")[1]
             myJS = myJS.split("}else t.data={")[0]
             myJS+="return t.data;}"
-            myJS="function setTokenWeb(j){let t={\"data\":JSON.parse(t)};var e=t.data.sessionId"+myJS
+            myJS="function setTokenWeb(j){let t={\"data\":JSON.parse(j)};var e=t.data.sessionId"+myJS
             print(myJS)
         self.browser.execute_script(myJS)
         self.activated = True
