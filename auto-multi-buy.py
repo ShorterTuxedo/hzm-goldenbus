@@ -17,8 +17,7 @@ import os
 
 
 LOGIN_COOLDOWN = 0.0
-
-info = json.loads(open("info.json", "r").read())
+info = json.loads(open("info.json", "r").read());myURL = "https://i.hzmbus.com/webhtml/index.html"
 
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 logfile = f"log{nowtime}.txt"
