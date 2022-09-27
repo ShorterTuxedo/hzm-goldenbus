@@ -288,8 +288,8 @@ while True:
                 # time.sleep(30*60) # 等 30 分
                 continue     
 
-            ADULT_PRICE = PRICES["responseData"][0]["adultHKD"]
-            KID_PRICE = PRICES["responseData"][0]["childrenHKD"]
+            ADULT_PRICE = PRICES["responseData"][0]["adultCNY"]
+            KID_PRICE = PRICES["responseData"][0]["childrenCNY"]
 
             TOTAL_PRICE = (ADULTS * ADULT_PRICE) + (KIDS * KID_PRICE)
 
@@ -357,7 +357,7 @@ while True:
                         "endStationCode": END,
                         "boardingPointCode": START + "01",
                         "breakoutPointCode": END + "01",
-                        "currency": "2",
+                        "currency": "1",
                         "ticketCategory": "1",
                         "tickets": PASSENGERS,
                         "amount": TOTAL_PRICE * 100,
