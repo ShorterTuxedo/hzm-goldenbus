@@ -3,6 +3,7 @@ import acw_sc_v2
 import os
 import json
 import requests
+from pyvirtualdisplay import Display
 class HZMHash():
     def __init__(self, activate=False, url="https://i.hzmbus.com/webhtml/index.html"):
         self.activated = activate
@@ -32,6 +33,7 @@ class HZMHash():
             # 调用函数在页面加载前执行脚本
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': stealthminjs})
         except Exception as e:
+            print(e)
             print("失败")
         self.browser.get(url)
         print("The site is loaded.")
