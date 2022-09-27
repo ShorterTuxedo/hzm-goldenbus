@@ -71,20 +71,20 @@ class HZMHash():
             myJS = myJS.split("var e=t.data.sessionId")[1]
             myJS = myJS.split("}else t.data={")[0]
             myJS+="return t.data;}"
-            myJS="function setTokenWeb(j){let t={\"data\":JSON.parse(j)};var e=t.data.sessionId"+myJS
+            myJS="window.setTokenWeb = function (j){let t={\"data\":JSON.parse(j)};var e=t.data.sessionId"+myJS
             print(myJS)
         self.browser.execute_script(myJS)
         self.activated = True
     def msk6(self, data):
         if self.activated and self.browser != None:
-            return self.browser.execute_script("return msk6(" + json.dumps(data, ensure_ascii=False) + ");")
+            return self.browser.execute_script("return window.msk6(" + json.dumps(data, ensure_ascii=False) + ");")
     def cs(self, data):
         if self.activated and self.browser != None:
-            return self.browser.execute_script("return cs(" + json.dumps(data, ensure_ascii=False) + ");")
+            return self.browser.execute_script("return window.cs(" + json.dumps(data, ensure_ascii=False) + ");")
     def ft(self, data):
         if self.activated and self.browser != None:
-            return self.browser.execute_script("return ft(" + json.dumps(data, ensure_ascii=False) + ");")
+            return self.browser.execute_script("return window.ft(" + json.dumps(data, ensure_ascii=False) + ");")
     def set_token_web(self, data):
         if self.activated and self.browser != None:
-            return self.browser.execute_script("return setTokenWeb('" + json.dumps(data, ensure_ascii=False) + "');")
+            return self.browser.execute_script("return window.setTokenWeb('" + json.dumps(data, ensure_ascii=False) + "');")
         return data
