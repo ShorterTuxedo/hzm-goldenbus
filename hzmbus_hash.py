@@ -4,13 +4,18 @@ import os
 import json
 import requests
 from pyvirtualdisplay import Display
+import re
+
+def split(delimiters, string, maxsplit=0):
+    regex_pattern = '|'.join(map(re.escape, delimiters))
+    return re.split(regex_pattern, string, maxsplit)
 class HZMHash():
-    def __init__(self, activate=False, url="https://i.hzmbus.com/webhtml/index.html"):
+    def __init__(self, activate=False, url="https://i.hzmbus.com/webhtml/index.html", myJSURL=None, jsScript=None, disable_redirects=False):
         self.activated = activate
         self.browser = None
         if activate:
-            self.activate_browser(url)
-    def activate_browser(self, url="https://i.hzmbus.com/webhtml/index.html", myJsURL=None, jsScript=None):
+            self.activate_browser(url=url, myJSURL=myJSURL, jsScript=jsScript, disable_redirects=disable_redirects)
+    def activate_browser(self, url="https://i.hzmbus.com/webhtml/index.html", myJsURL=None, jsScript=None, disable_redirects=False):
         stealthminjs = None
         with open('stealth.min.js', 'r') as f:
             stealthminjs = f.read()
@@ -32,6 +37,8 @@ class HZMHash():
             self.browser = webdriver.Chrome(options=options)
             # 调用函数在页面加载前执行脚本
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': stealthminjs})
+            if disable_redirects:
+                self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': "window.onbeforeunload = () => \"Intercepted request\";"})
         except Exception as e:
             print(e)
             print("失败")
@@ -71,7 +78,7 @@ class HZMHash():
             headers["accept"] = "text/javascript, text/plain, */*"
             myJS = str(jsScrape.get(jsURL, headers=headers).content, encoding="UTF-8")
             myJS = myJS.split("var e=t.data.sessionId")[1]
-            myJS = myJS.split("}else t.data={")[0]
+            myJS = split(["}else t.data={", "}return Q(t)}"], myJS)[0]
             myJS+="return t.data;}"
             myJS="window.setTokenWeb = function (j){let t={\"data\":JSON.parse(j)};var e=t.data.sessionId"+myJS
             print(myJS)
