@@ -18,7 +18,7 @@ import os
 
 LOGIN_COOLDOWN = 0.0
 
-info = json.loads(open("info.json", "r").read());myURL = "https://i.hzmbus.com/webhtml/index.html"
+info = json.loads(open("info.json", "r").read());myURL = "https://wx.hzmbus.com/wxhtml/index.html"
 
 nowtime = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 logfile = f"log{nowtime}.txt"
@@ -414,7 +414,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA,
             FINISHEDCAPTCHAS[i] = True
             referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
             referrerURL = parse.quote_plus(referrerURL)
-            myhashs[i].activate_browser(url=myURL);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+            myhashs[i].activate_browser(url=myURL, disable_redirects=True);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
             ali_being_used = False
             if my_caps[i] == None:
                 break
@@ -577,7 +577,7 @@ while True:
                 while True:
                     referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
                     referrerURL = parse.quote_plus(referrerURL)
-                    myhashs[i].activate_browser(url=myURL);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                    myhashs[i].activate_browser(url=myURL, disable_redirects=True);my_caps[i] = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
                     if my_caps[i] == None:
                         continue
                     break

@@ -72,7 +72,7 @@ while myChoice != "7":
         clearScreen()
         print("="*20 + "从 文 件 导 入" + "="*20)
         try:
-            info = json.loads(open("info.json", "r").read());myURL = "https://i.hzmbus.com/webhtml/index.html"
+            info = json.loads(open("info.json", "r").read());myURL = "https://wx.hzmbus.com/wxhtml/index.html"
             uname = info["uname"]
             pwd = info["pwd"]
             date = info["date"]

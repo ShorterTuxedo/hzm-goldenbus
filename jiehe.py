@@ -26,7 +26,7 @@ CWRONG = False
 
 CAPTCHA = 2 # 2 = 阿里云， 1 = 文字
 
-info = json.loads(open("info.json", "r").read());myURL = "https://i.hzmbus.com/webhtml/index.html"
+info = json.loads(open("info.json", "r").read());myURL = "https://wx.hzmbus.com/wxhtml/index.html"
 
 DATE = "1970-01-01" # 替代日期
 
@@ -478,7 +478,7 @@ while True:
             FINISHEDCAPTCHA = True
             referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
             referrerURL = parse.quote_plus(referrerURL)
-            myhash.activate_browser(url=myURL);my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+            myhash.activate_browser(url=myURL, disable_redirects=True);my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
             if my_cap == None:
                 break
     elif not (weekday == 1 and (now.hour * 3600 + now.minute * 60 + now.second >= 71460 and now.hour * 3600 + now.minute * 60 + now.second <= 77400)):
@@ -738,7 +738,7 @@ while True:
                     FINISHEDCAPTCHA = True
                     referrerURL = f"https://i.hzmbus.com/webhtml/ticket_details?xlmc_1={BUS_STOPS[START]}&xlmc_2={BUS_STOPS[END]}&xllb=1&xldm={ROUTE}&code_1={START}&code_2={END}"
                     referrerURL = parse.quote_plus(referrerURL)
-                    myhash.activate_browser(url=myURL);my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
+                    myhash.activate_browser(url=myURL, disable_redirects=True);my_cap = crack_ali.slide(hzmbus, headers, referrerURL, "FFFF0N0000000000A95D", "nc_other_h5", "6748c822ee91e", TRACK)
                     if my_cap == None:
                         break
                 if CAPTCHA == 2:
