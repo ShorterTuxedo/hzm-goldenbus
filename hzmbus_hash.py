@@ -1,4 +1,9 @@
-from selenium import webdriver
+from seleniumwire import webdriver
+from seleniumwire.thirdparty.mitmproxy.net.http.encoding import encode
+from seleniumwire.thirdparty.mitmproxy.net.http.encoding import decode
+import zlib
+import brotli
+import base64
 import acw_sc_v2
 import os
 import json
@@ -37,8 +42,22 @@ class HZMHash():
             self.browser = webdriver.Chrome(options=options)
             # 调用函数在页面加载前执行脚本
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': stealthminjs})
+            self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': 'window.fakelocation=new Proxy(Object.create(window.location),{get:function(e,o,n){return"replace"===o||"reload"===o||"assign"===o?()=>void 0:window.location[o]},set:function(e,o,n,t){}}),window.donothing=()=>void 0,window.onbeforeunload=()=>"Redirect intercepted";'})
             if disable_redirects:
-                self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': "window.onbeforeunload = () => \"Intercepted request\";"})
+                def interceptor_js(request, response):
+                    if request.path.endswith(('.js', '.html', '.htm', '.mht', '.mhtm', '.mhtml', '.xht', '.xhtm', '.xhtml', '.dht', '.dhtm', '.dhtml', '.htm', '.html')):
+                        print("我捕获到了 js / HTML 请求。")
+                        myResText = decode(response.body, response.headers.get('Content-Encoding', 'identity'))
+                        # print(request.path)
+                        # print(myResText)
+                        myResText = myResText.replace(b"document.location", b"window.fakelocation")
+                        myResText = myResText.replace(b"window.location", b"window.fakelocation")
+                        # print(myResText)
+                        myResText = encode(myResText, response.headers.get('Content-Encoding', 'identity'))
+                        response.body = myResText
+                        del response.headers['Content-Length']
+                        response.headers['Content-Length'] = str(len(request.body))
+                self.browser.response_interceptor = interceptor_js
         except Exception as e:
             print(e)
             print("失败")
