@@ -1,4 +1,5 @@
 selenium<4.3.0
+selenium-wire
 Flask
 requests
 ddddocr
