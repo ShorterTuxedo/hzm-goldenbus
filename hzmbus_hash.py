@@ -42,21 +42,31 @@ class HZMHash():
             self.browser = webdriver.Chrome(options=options)
             # 调用函数在页面加载前执行脚本
             self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': stealthminjs})
-            self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': 'window.fakelocation=new Proxy(Object.create(window.location),{get:function(e,o,n){return"replace"===o||"reload"===o||"assign"===o?()=>void 0:window.location[o]},set:function(e,o,n,t){}}),window.donothing=()=>void 0,window.onbeforeunload=()=>"Redirect intercepted";'})
+            self.browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {'source': 'window.fakelocation=new Proxy(Object.create(window.location),{get:function(e,o,n){return"replace"===o||"reload"===o||"assign"===o?()=>void 0:window.location[o]},set:function(e,o,n,t){}}),window.donothing=()=>void 0,window.onbeforeunload=()=>"Redirect intercepted";Object.defineProperty(window, "fakelocation",{writable: false})'})
             if disable_redirects:
                 def interceptor_js(request, response):
                     if request.path.endswith(('.js', '.html', '.htm', '.mht', '.mhtm', '.mhtml', '.xht', '.xhtm', '.xhtml', '.dht', '.dhtm', '.dhtml', '.htm', '.html')):
+                        myResText = response.body
                         print("我捕获到了 js / HTML 请求。")
-                        myResText = decode(response.body, response.headers.get('Content-Encoding', 'identity'))
-                        # print(request.path)
+                        print("路径: ", request.path)
+                        enc = response.headers.get('Content-Encoding', 'identity')
+                        print("文件编码：", enc)
+                        print("首5字节：", myResText[0:5])
+                        myResText = decode(myResText, enc)
+                        print("首5字节 （已解压缩）：", myResText[0:5])
                         # print(myResText)
                         myResText = myResText.replace(b"document.location", b"window.fakelocation")
                         myResText = myResText.replace(b"window.location", b"window.fakelocation")
                         # print(myResText)
-                        myResText = encode(myResText, response.headers.get('Content-Encoding', 'identity'))
+                        myResText = encode(myResText, enc)
+                        print("首5字节（已重新压缩）:", myResText[0:5])
                         response.body = myResText
                         del response.headers['Content-Length']
-                        response.headers['Content-Length'] = str(len(request.body))
+                        response.headers['Content-Length'] = str(len(response.body))
+                    print("=====响应=====")
+                    print(response)
+                    print(response.headers)
+                    print("首5字节：", response.body[0:5])
                 self.browser.response_interceptor = interceptor_js
         except Exception as e:
             print(e)
