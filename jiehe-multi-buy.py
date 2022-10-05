@@ -259,7 +259,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA,
                         hzmbus.cookies.update(acw)
                         result = None
                         continue
-                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                    elif ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                         result = None
                         if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                             time.sleep(60)
@@ -338,7 +338,7 @@ def buy(hzmbus, headers, i, info, CAPTCHAS, CWRONGS, FINISHEDCAPTCHAS, TIMESHUA,
                     acw.set("acw_sc__v2", ACWSCV2)
                     hzmbus.cookies.update(acw)
                     continue
-                elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                elif ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                     if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                         time.sleep(60)
                     continue
@@ -467,7 +467,7 @@ def LoginToAcc(ACC, IndexMonitor, myHeaders, MyDones):
                 acw.set("acw_sc__v2", ACWSCV2)
                 hzmbus.cookies.update(acw)
                 continue
-            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                 if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                     time.sleep(60)
                 continue
@@ -637,7 +637,7 @@ while True:
                                 continue
                             if "操作频繁" not in str(homepage.content, encoding="UTF-8"):
                                 rateLimited[accNum] = None
-                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                                 if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")) and checkAll():
                                     time.sleep(60)
                                 elif ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
@@ -689,7 +689,7 @@ while True:
                                 continue
                             if "操作频繁" not in str(homepage.content, encoding="UTF-8"):
                                 rateLimited[accNum] = None
-                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
+                            elif ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))) or ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
                                 if ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")) and (checkAll()):
                                     time.sleep(60)
                                 elif ("操作频繁" in str(homepage.content, encoding="UTF-8") or "DTD HTML 2.0" in str(homepage.content, encoding="UTF-8")):
@@ -697,7 +697,7 @@ while True:
                                     rateLimited[accNum] = time.time()
                                     accNum += 1
                                     accNum = accNum % len(myHeaders)
-                                if ("系统异常" in str(homepage.content, encoding="UTF-8") or "系统繁忙" in str(homepage.content, encoding="UTF-8")):
+                                if ("系统异常" in str(homepage.content, encoding="UTF-8") or ("系统繁忙" in str(homepage.content, encoding="UTF-8") or "系統繁忙" in str(homepage.content, encoding="UTF-8"))):
                                     continue
                                 break
                             if homepage.json().get("message", "无信息") == "操作频繁,请稍后再试":
