@@ -1,7 +1,8 @@
 # **NEW!** 新添加多账号查询功能。
+# 多线程抢票 + 微信端支持可以去 autorebuy 分支。
 # 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium，无需提前手动输入轨迹。
 # 原作者对黄牛的立场是积极反对，欢迎各位一起优化脚本，一起反对黄牛。
-# https://t.me/+0_rCi5AAPTRmMDM9
+# 交流群 https://t.me/+HLxjpo3uLQhhMzBl
 -------------
 
 # 港珠澳大桥穿梭巴士车票自动抢票机器人
