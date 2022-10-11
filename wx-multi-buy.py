@@ -686,7 +686,7 @@ while True:
 
                     while True:
                         try:
-                            homepage = hzmbus.post("https://wx.hzmbus.com/wxapi/manage/query.book.info.data", headers=headers, json={
+                            homepage = hzmbus.post("https://wx.hzmbus.com/webapi/manage/query.book.info.data", headers=headers, json={
                                 "bookDate":DATE,
                                 "lineCode":ROUTE,
                                 "appId":"HZMBWEB_HK",

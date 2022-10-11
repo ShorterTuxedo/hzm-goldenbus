@@ -252,7 +252,7 @@ while True:
             writeLog(f"[购票中] 正在购买 {BUS_STOPS[START]} => {BUS_STOPS[END]} 车次的车票。")
             while True:
                 try:
-                    homepage = hzmbus.post("https://wx.hzmbus.com/wxapi/ticket/query.line.ticket.price", headers=headers, json={
+                    homepage = hzmbus.post("https://wx.hzmbus.com/webapi/ticket/query.line.ticket.price", headers=headers, json={
                         "buyDate":DATE,
                         "lineCode":ROUTE,
                         "appId":"HZMBWEB_HK",
@@ -293,7 +293,7 @@ while True:
 
             while True:
                 try:
-                    homepage = hzmbus.post("https://wx.hzmbus.com/wxapi/manage/query.book.info.data", headers=headers, json={
+                    homepage = hzmbus.post("https://wx.hzmbus.com/webapi/manage/query.book.info.data", headers=headers, json={
                         "bookDate":DATE,
                         "lineCode":ROUTE,
                         "appId":"HZMBWEB_HK",
@@ -401,7 +401,7 @@ while True:
                             break
                 while True:
                     try:
-                        homepage = hzmbus.post("https://wx.hzmbus.com/wxapi/ticket/buy.ticket", headers=headers, json=myhash.set_token_web({
+                        homepage = hzmbus.post("https://wx.hzmbus.com/webapi/ticket/buy.ticket", headers=headers, json=myhash.set_token_web({
                         "ticketData": DATE,
                         "lineCode": ROUTE,
                         "startStationCode": START,
