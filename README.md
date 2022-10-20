@@ -1,3 +1,6 @@
+![已停止维护](https://user-images.githubusercontent.com/49613009/196971511-7b2bcf67-024a-4a08-a1c6-919b6c1b9068.png)
+
+
 # **NEW!** 新添加多账号查询功能。
 # 多线程抢票 + 微信端支持可以去 autorebuy 分支。
 # 更新了 crack_ali.py, 需提前运行alipost.py，需安装selenium，无需提前手动输入轨迹。
